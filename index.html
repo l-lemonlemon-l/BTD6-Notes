@@ -114,6 +114,81 @@
   </section>
 
   <section>
+    <h2><i class="ti ti-droplet"></i> Bloon Types</h2>
+    <div class="card">
+      <table>
+        <tr><th>Bloon</th><th>First appears</th><th>Releases on pop</th></tr>
+        <tr><td>Red</td><td>Round 1</td><td>Nothing</td></tr>
+        <tr><td>Blue</td><td>Round 2</td><td>1 Red</td></tr>
+        <tr><td>Green</td><td>Round 4</td><td>1 Blue</td></tr>
+        <tr><td>Yellow</td><td>Round 11</td><td>1 Green (fast)</td></tr>
+        <tr><td>Pink</td><td>Round 14</td><td>1 Yellow (faster)</td></tr>
+        <tr><td>Black</td><td>Round 17</td><td>2 Pink — immune to explosions</td></tr>
+        <tr><td>White</td><td>Round 17</td><td>2 Pink — immune to freeze/cold</td></tr>
+        <tr><td>Purple</td><td>Round 25</td><td>2 Pink — immune to energy/plasma/fire/frigid</td></tr>
+        <tr><td>Lead</td><td>Round 28</td><td>Nothing — immune to sharp damage</td></tr>
+        <tr><td>Zebra</td><td>Round 32</td><td>1 Black + 1 White</td></tr>
+        <tr><td>Rainbow</td><td>Round 37</td><td>2 Zebra</td></tr>
+        <tr><td>Ceramic</td><td>Round 40</td><td>3 Rainbow when fully popped</td></tr>
+        <tr><td>Camo</td><td>Round 24</td><td>Property, not a type — invisible without detection</td></tr>
+        <tr><td>Fortified</td><td>Round 42 (MOAB-class)</td><td>Property — doubles HP</td></tr>
+        <tr><td>Regrow</td><td>Round 43</td><td>Property — regrows a layer over time</td></tr>
+        <tr><td>MOAB</td><td>Round 40</td><td>3 Ceramic</td></tr>
+        <tr><td>BFB</td><td>Round 60</td><td>4 MOAB</td></tr>
+        <tr><td>ZOMG</td><td>Round 80</td><td>4 BFB</td></tr>
+        <tr><td>DDT</td><td>Round 90</td><td>4 Camo Regrow Ceramic</td></tr>
+        <tr><td>BAD</td><td>Round 100</td><td>2 ZOMG + 3 DDT</td></tr>
+        <tr><td>Golden</td><td>Round 21+ (event)</td><td>Nothing — takes 1 dmg/hit, evolves each appearance</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><i class="ti ti-shield-star"></i> Towers</h2>
+
+    <h3 style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin:0 0 8px;">Primary</h3>
+    <div class="card">
+      <p><b>Dart Monkey</b> — throws darts (no Lead/frozen). Paths: spiked balls with high pierce / more darts + temp Super Monkey conversion / crossbow bolts.</p>
+      <p><b>Boomerang Monkey</b> — curved boomerangs, up to 4 pops. Paths: bouncing glaives / faster attacks + burst ability / straight-line stalling glaives.</p>
+      <p><b>Bomb Shooter</b> — AoE bombs, pops Lead + frozen, not Black. Paths: bigger stunning explosions / MOAB-shredding missiles / cluster bombs.</p>
+      <p><b>Tack Shooter</b> — 8-directional burst, short range.</p>
+      <p><b>Ice Monkey</b> — AoE freeze + damage, no MOAB-class by default.</p>
+      <p><b>Glue Gunner</b> — slows single targets with long-lasting glue, no direct damage by default.</p>
+      <p><b>Desperado</b> — pistol default. Paths: revolver (more rounds/shot) / rifle (long range) / shotgun (close range).</p>
+    </div>
+
+    <h3 style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin:0 0 8px;">Military</h3>
+    <div class="card">
+      <p><b>Sniper Monkey</b> — global range, single target, no Camo by default.</p>
+      <p><b>Monkey Sub</b> — homing darts underwater. Paths: submerge for support utility / missile variants / dart buffs.</p>
+      <p><b>Monkey Buccaneer</b> — dual cannons, water only. Paths: faster fire + attack planes / cannons that hook in MOAB-class / cash generation.</p>
+      <p><b>Monkey Ace</b> — flies a fixed path, drops darts.</p>
+      <p><b>Heli Pilot</b> — follows cursor, flexible positioning.</p>
+      <p><b>Mortar Monkey</b> — long-range AoE, needs target designation.</p>
+      <p><b>Dartling Gunner</b> — follows cursor, rapid fire, gift-box unlock.</p>
+    </div>
+
+    <h3 style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin:0 0 8px;">Magic</h3>
+    <div class="card">
+      <p><b>Wizard Monkey</b> — magic bolts, no Purple/Lead by default. Paths: stronger bolts / fire attacks / dark magic (camo reveal + undead summons).</p>
+      <p><b>Super Monkey</b> — dart volley, unlocked lvl 15-20. Paths: Sun God powers / robotic transformation / dual dark blades + teleport.</p>
+      <p><b>Ninja Monkey</b> — shuriken, innate Camo detection.</p>
+      <p><b>Alchemist</b> — acid flasks, pops everything but no Camo detection. Paths: buff potions for other towers / stronger acid + explosions / turn bloons to gold.</p>
+      <p><b>Druid</b> — thorn volley, no frozen/Lead by default. Paths: storm (lightning/tornadoes) / jungle (vines + cash) / wrath (speed/damage).</p>
+      <p><b>Mermonkey</b> — trident splash, land or water (better in water). Paths: stronger tridents + freeze/seek / Abyssal Creature tentacles / entrancing song that buffs towers.</p>
+    </div>
+
+    <h3 style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin:0 0 8px;">Support</h3>
+    <div class="card">
+      <p><b>Banana Farm</b> — generates cash, no attack.</p>
+      <p><b>Spike Factory</b> — passive track spikes, can hit Camo without detection.</p>
+      <p><b>Monkey Village</b> — buffs range/pierce/discounts for nearby towers.</p>
+      <p><b>Engineer Monkey</b> — sentry gun + deployable traps.</p>
+      <p><b>Beast Handler</b> — melee by default, upgrades add up to 2 of 3 beasts (land/water/air) to attack instead.</p>
+    </div>
+  </section>
+
+  <section>
     <h2><i class="ti ti-map"></i> Map Notes — Three Mines 'Round (Hard)</h2>
     <div class="card">
       <p>Removable Bananite crystals — same profit on all difficulties/modes except Double Cash. Cheap crystal is almost always worth mining early.</p>
