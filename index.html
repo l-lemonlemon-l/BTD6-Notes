@@ -100,11 +100,75 @@
     <h2><i class="ti ti-skull"></i> Bloon Intel</h2>
 
     <div class="card">
-      <p class="card-title">DDT <span class="tag tag-ddt">MOAB-class</span></p>
-      <p>Dark Dirigible Titan. First appears <b>round 90</b> (88 in Alt Bloons Rounds).</p>
-      <p><b>400 HP</b> (800 fortified) — scales to ~480 by round 90. Moves slightly faster than Ceramics.</p>
-      <p>Has Black + Lead + Camo all at once. Pops into 4 Camo Regrow Ceramics. Immune to attacks that only reach BFBs.</p>
-      <p>Needs: camo detection, lead-popping, black-popping — all three or it walks through.</p>
+      <p class="card-title">Red <span class="tag tag-ddt">Basic</span></p>
+      <p>First appears <b>round 1</b>. The starting bloon — 1 layer, no properties, no immunities.</p>
+      <p>Releases nothing when popped. Anything pops it.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Blue <span class="tag tag-ddt">Basic</span></p>
+      <p>First appears <b>round 2</b>. Slightly faster than Red.</p>
+      <p>Releases 1 Red on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Green <span class="tag tag-ddt">Basic</span></p>
+      <p>First appears <b>round 4</b>. Faster than Blue.</p>
+      <p>Releases 1 Blue on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Yellow <span class="tag tag-ddt">Basic</span></p>
+      <p>First appears <b>round 11</b>. Notably fast — a real jump in speed from Green.</p>
+      <p>Releases 1 Green on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Pink <span class="tag tag-ddt">Basic</span></p>
+      <p>First appears <b>round 14</b>. Fastest of the basic bloons, faster even than Yellow.</p>
+      <p>Releases 1 Yellow on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Black <span class="tag tag-ddt">Immunity</span></p>
+      <p>First appears <b>round 17</b>. Immune to explosion-type damage — bomb splash, mortar, etc. don't touch it directly.</p>
+      <p>Releases 2 Pink on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">White <span class="tag tag-ddt">Immunity</span></p>
+      <p>First appears <b>round 17</b>. Immune to freeze/cold damage and effects. Slightly faster than Black.</p>
+      <p>Releases 2 Pink on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Purple <span class="tag tag-ddt">Immunity</span></p>
+      <p>First appears <b>round 25</b>. Immune to energy, plasma, fire, and frigid damage types — dodges a lot of magic-tower damage.</p>
+      <p>Releases 2 Pink on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Lead <span class="tag tag-ddt">Immunity</span></p>
+      <p>First appears <b>round 28</b>. Immune to sharp-type damage (most darts). Slow-moving but needs specific popping power.</p>
+      <p>Releases nothing on pop — a dead end unless you can hit it at all.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Zebra <span class="tag tag-ddt">Combo</span></p>
+      <p>First appears <b>round 32</b>. Carries both Black and White immunities at once (explosion + freeze).</p>
+      <p>Releases 1 Black + 1 White on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Rainbow <span class="tag tag-ddt">Combo</span></p>
+      <p>First appears <b>round 37</b>. Fast and layered — effectively stacks toward Zebra's combined immunities.</p>
+      <p>Releases 2 Zebra on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Ceramic <span class="tag tag-ddt">Combo</span></p>
+      <p>First appears <b>round 40</b>. Tanky multi-hit layer — takes several hits to fully pop, not just one.</p>
+      <p>Releases 3 Rainbow once fully popped through.</p>
     </div>
 
     <div class="card">
@@ -116,38 +180,55 @@
     </div>
 
     <div class="card">
+      <p class="card-title">Fortified <span class="tag tag-ddt">Property</span></p>
+      <p>Not a bloon type — a property applied to MOAB-class bloons, first seen <b>round 42</b>.</p>
+      <p>Doubles the bloon's health. Can be stripped by de-fortify effects (Embrittlement, Super Brittle) to bring it back to normal.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Regrow <span class="tag tag-ddt">Property</span></p>
+      <p>Not a bloon type — a property, first seen <b>round 43</b>.</p>
+      <p>Slowly regrows a popped layer back over time if left alone — punishes stalling without follow-up damage.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">MOAB <span class="tag tag-bad">MOAB-class</span></p>
+      <p>First appears <b>round 40</b>. The first blimp — big single-hit-point bar across 4 damage phases.</p>
+      <p>Releases 3 Ceramic on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">BFB <span class="tag tag-bad">MOAB-class</span></p>
+      <p>First appears <b>round 60</b>. Bigger, tougher MOAB — a real step up in HP.</p>
+      <p>Releases 4 MOAB on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">ZOMG <span class="tag tag-bad">MOAB-class</span></p>
+      <p>First appears <b>round 80</b>. Massive HP pool, slow-moving, no special immunities of its own.</p>
+      <p>Releases 4 BFB on pop.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">DDT <span class="tag tag-bad">MOAB-class</span></p>
+      <p>Dark Dirigible Titan. First appears <b>round 90</b> (88 in Alt Bloons Rounds).</p>
+      <p><b>400 HP</b> (800 fortified) — scales to ~480 by round 90. Moves slightly faster than Ceramics.</p>
+      <p>Has Black + Lead + Camo all at once. Pops into 4 Camo Regrow Ceramics. Immune to attacks that only reach BFBs.</p>
+      <p>Needs: camo detection, lead-popping, black-popping — all three or it walks through.</p>
+    </div>
+
+    <div class="card">
       <p class="card-title">BAD <span class="tag tag-bad">MOAB-class</span></p>
       <p>Big Airship of Doom. First appears <b>round 100</b> (99 in Alt Bloons Rounds). Strongest non-boss bloon.</p>
       <p>Same size/speed as a ZOMG. Immune to blowback, knockback, slow, and stun (few exceptions like Time Stop).</p>
       <p><b>55,760 RBE</b> (98,360 fortified) base — scales to 67,200 by round 100.</p>
       <p>Releases 2 ZOMGs + 3 DDTs on pop. Round 100 usually solved with burst damage (Spike Storm) rather than sustained DPS.</p>
     </div>
+
     <div class="card">
-      <p class="card-title">All Bloon Types</p>
-      <table>
-        <tr><th>Bloon</th><th>First appears</th><th>Releases on pop</th></tr>
-        <tr><td>Red</td><td>Round 1</td><td>Nothing</td></tr>
-        <tr><td>Blue</td><td>Round 2</td><td>1 Red</td></tr>
-        <tr><td>Green</td><td>Round 4</td><td>1 Blue</td></tr>
-        <tr><td>Yellow</td><td>Round 11</td><td>1 Green (fast)</td></tr>
-        <tr><td>Pink</td><td>Round 14</td><td>1 Yellow (faster)</td></tr>
-        <tr><td>Black</td><td>Round 17</td><td>2 Pink — immune to explosions</td></tr>
-        <tr><td>White</td><td>Round 17</td><td>2 Pink — immune to freeze/cold</td></tr>
-        <tr><td>Purple</td><td>Round 25</td><td>2 Pink — immune to energy/plasma/fire/frigid</td></tr>
-        <tr><td>Lead</td><td>Round 28</td><td>Nothing — immune to sharp damage</td></tr>
-        <tr><td>Zebra</td><td>Round 32</td><td>1 Black + 1 White</td></tr>
-        <tr><td>Rainbow</td><td>Round 37</td><td>2 Zebra</td></tr>
-        <tr><td>Ceramic</td><td>Round 40</td><td>3 Rainbow when fully popped</td></tr>
-        <tr><td>Camo</td><td>Round 24</td><td>Property, not a type — invisible without detection</td></tr>
-        <tr><td>Fortified</td><td>Round 42 (MOAB-class)</td><td>Property — doubles HP</td></tr>
-        <tr><td>Regrow</td><td>Round 43</td><td>Property — regrows a layer over time</td></tr>
-        <tr><td>MOAB</td><td>Round 40</td><td>3 Ceramic</td></tr>
-        <tr><td>BFB</td><td>Round 60</td><td>4 MOAB</td></tr>
-        <tr><td>ZOMG</td><td>Round 80</td><td>4 BFB</td></tr>
-        <tr><td>DDT</td><td>Round 90</td><td>4 Camo Regrow Ceramic</td></tr>
-        <tr><td>BAD</td><td>Round 100</td><td>2 ZOMG + 3 DDT</td></tr>
-        <tr><td>Golden</td><td>Round 21+ (event)</td><td>Nothing — takes 1 dmg/hit, evolves each appearance</td></tr>
-      </table>
+      <p class="card-title">Golden <span class="tag tag-ddt">Event</span></p>
+      <p>First appears <b>round 21+</b>, weekend event only — not in CHIMPS, Deflation, or Sandbox.</p>
+      <p>Takes only 1 damage per hit regardless of attack power, and evolves (gains new properties) each time it spawns. Releases nothing — no lives lost if it escapes.</p>
     </div>
   </section>
 
