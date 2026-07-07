@@ -279,7 +279,7 @@
 
   <section>
     <h2><i class="ti ti-bulb"></i> Tips &amp; Tricks</h2>
-    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Saved to your browser only — not shared with other visitors.</p>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Shared with everyone who visits this page.</p>
     <div class="add-form">
       <input id="tip-map" type="text" placeholder="Map" />
       <input id="tip-diff" type="text" placeholder="Difficulty" />
@@ -307,71 +307,77 @@
   <footer>Sourced from Blooncyclopedia (bloonswiki.com)</footer>
 </div>
 
-<script>
-const TIP_KEY = 'btd6_tips';
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, deleteDoc, doc,
+  onSnapshot, orderBy, query, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-function loadTips() {
-  try {
-    const raw = localStorage.getItem(TIP_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-function saveTips(tips) {
-  try { localStorage.setItem(TIP_KEY, JSON.stringify(tips)); } catch {}
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyAwmtpeT3I0kWlxkzV_IqkWi59Wg1yFWrA",
+  authDomain: "striker-jones-notes.firebaseapp.com",
+  projectId: "striker-jones-notes",
+  storageBucket: "striker-jones-notes.firebasestorage.app",
+  messagingSenderId: "468907067933",
+  appId: "1:468907067933:web:c1780a086a7f2181b754f4",
+  measurementId: "G-J3K6J48S58"
+};
 
-function tipRow(tip, idx) {
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const tipsRef = collection(db, "tips");
+const tipsQuery = query(tipsRef, orderBy("createdAt", "desc"));
+
+function tipRow(tip) {
   const div = document.createElement('div');
   div.className = 'card';
   div.style.marginBottom = '8px';
   div.innerHTML = `
     <p class="card-title">
       ${tip.map || 'Any map'} <span class="tag tag-ddt">${tip.diff || 'Any difficulty'}</span> <span class="tag tag-bad">${tip.type || 'Any mode'}</span>
-      <button data-idx="${idx}" aria-label="Remove" style="margin-left:auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 3px 7px; cursor: pointer;"><i class="ti ti-trash"></i></button>
+      <button aria-label="Remove" style="margin-left:auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 3px 7px; cursor: pointer;"><i class="ti ti-trash"></i></button>
     </p>
     <p>${tip.text}</p>
   `;
+  div.querySelector('button').onclick = () => deleteDoc(doc(db, "tips", tip.id));
   return div;
 }
 
-function renderTips() {
-  const tips = loadTips();
+onSnapshot(tipsQuery, (snapshot) => {
   const list = document.getElementById('tip-list');
   list.innerHTML = '';
-  if (tips.length === 0) {
+  if (snapshot.empty) {
     list.innerHTML = '<p style="color:var(--muted); font-size:14px;">No tips saved yet.</p>';
     return;
   }
-  tips.forEach((tip, idx) => list.appendChild(tipRow(tip, idx)));
-  document.querySelectorAll('#tip-list button').forEach(btn => {
-    btn.onclick = () => {
-      const tips = loadTips();
-      tips.splice(parseInt(btn.dataset.idx), 1);
-      saveTips(tips);
-      renderTips();
-    };
+  snapshot.forEach((docSnap) => {
+    list.appendChild(tipRow({ id: docSnap.id, ...docSnap.data() }));
   });
-}
+}, (err) => {
+  document.getElementById('tip-list').innerHTML =
+    '<p style="color:var(--red); font-size:14px;">Could not connect to shared tips. Check Firestore setup.</p>';
+  console.error(err);
+});
 
-document.getElementById('tip-add-btn').onclick = () => {
+document.getElementById('tip-add-btn').onclick = async () => {
   const mapIn = document.getElementById('tip-map');
   const diffIn = document.getElementById('tip-diff');
   const typeIn = document.getElementById('tip-type');
   const textIn = document.getElementById('tip-text');
   if (!textIn.value.trim()) return;
-  const tips = loadTips();
-  tips.push({map: mapIn.value.trim(), diff: diffIn.value.trim(), type: typeIn.value.trim(), text: textIn.value.trim()});
-  saveTips(tips);
+  await addDoc(tipsRef, {
+    map: mapIn.value.trim(),
+    diff: diffIn.value.trim(),
+    type: typeIn.value.trim(),
+    text: textIn.value.trim(),
+    createdAt: serverTimestamp()
+  });
   mapIn.value = '';
   diffIn.value = '';
   typeIn.value = '';
   textIn.value = '';
-  renderTips();
 };
-
-renderTips();
 </script>
 </body>
 </html>
