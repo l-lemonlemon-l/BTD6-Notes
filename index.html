@@ -71,6 +71,17 @@
     background: transparent; border: 1px solid var(--border); color: var(--muted);
     border-radius: 6px; padding: 5px 8px; cursor: pointer;
   }
+  .add-form { display: flex; gap: 8px; margin-bottom: 8px; }
+  .add-form input {
+    flex: 1; background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 9px 12px; border-radius: 8px; font-size: 14px;
+  }
+  .add-form input::placeholder { color: var(--muted); }
+  .add-form button {
+    background: var(--green); color: #14180f; border: none; border-radius: 8px;
+    padding: 0 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center;
+  }
+  .add-form button:hover { opacity: 0.9; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 3rem; }
 </style>
 </head>
@@ -186,20 +197,18 @@
   </section>
 
   <section>
-    <h2><i class="ti ti-map"></i> Map Notes — Three Mines 'Round (Hard)</h2>
-    <div class="card">
-      <p>Removable Bananite crystals — same profit on all difficulties/modes except Double Cash. Cheap crystal is almost always worth mining early.</p>
-      <table>
-        <tr><th>Crystal</th><th>Rounds</th><th>Cost</th><th>Return</th><th>Profit</th></tr>
-        <tr><td>Under the loop</td><td>10</td><td>$435</td><td>$870</td><td class="profit">$435</td></tr>
-        <tr><td>Left side</td><td>10</td><td>$3,000</td><td>$4,600</td><td class="profit">$1,600</td></tr>
-        <tr><td>Bottom-right, inside loop</td><td>10</td><td>$10,000</td><td>$15,000</td><td class="profit">$5,000</td></tr>
-        <tr><td>Above the loop</td><td>10</td><td>$25,000</td><td>$37,000</td><td class="profit">$12,000</td></tr>
-        <tr><td>Top-left, inside loop</td><td>10</td><td>$50,000</td><td>$72,000</td><td class="profit">$22,000</td></tr>
-        <tr><td>Bottom-right corner</td><td>20</td><td>$100,000</td><td>$160,000</td><td class="profit">$60,000</td></tr>
-      </table>
-      <p style="margin-top:10px;">Placement tip: the center loop tempts but causes chasing without AoE — better spots are where the lane crosses itself for 3–4 looks at the same bloons.</p>
+    <h2><i class="ti ti-bulb"></i> Tips &amp; Tricks</h2>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Saved to your browser only — not shared with other visitors.</p>
+    <div class="add-form">
+      <input id="tip-map" type="text" placeholder="Map" />
+      <input id="tip-diff" type="text" placeholder="Difficulty" />
+      <input id="tip-type" type="text" placeholder="Mode" />
     </div>
+    <div class="add-form">
+      <input id="tip-text" type="text" placeholder="Your tip..." style="flex:3;" />
+      <button id="tip-add-btn"><i class="ti ti-plus"></i></button>
+    </div>
+    <div id="tip-list"></div>
   </section>
 
   <section>
@@ -216,5 +225,72 @@
 
   <footer>Sourced from Blooncyclopedia (bloonswiki.com)</footer>
 </div>
+
+<script>
+const TIP_KEY = 'btd6_tips';
+
+function loadTips() {
+  try {
+    const raw = localStorage.getItem(TIP_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+function saveTips(tips) {
+  try { localStorage.setItem(TIP_KEY, JSON.stringify(tips)); } catch {}
+}
+
+function tipRow(tip, idx) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.style.marginBottom = '8px';
+  div.innerHTML = `
+    <p class="card-title">
+      ${tip.map || 'Any map'} <span class="tag tag-ddt">${tip.diff || 'Any difficulty'}</span> <span class="tag tag-bad">${tip.type || 'Any mode'}</span>
+      <button data-idx="${idx}" aria-label="Remove" style="margin-left:auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 3px 7px; cursor: pointer;"><i class="ti ti-trash"></i></button>
+    </p>
+    <p>${tip.text}</p>
+  `;
+  return div;
+}
+
+function renderTips() {
+  const tips = loadTips();
+  const list = document.getElementById('tip-list');
+  list.innerHTML = '';
+  if (tips.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted); font-size:14px;">No tips saved yet.</p>';
+    return;
+  }
+  tips.forEach((tip, idx) => list.appendChild(tipRow(tip, idx)));
+  document.querySelectorAll('#tip-list button').forEach(btn => {
+    btn.onclick = () => {
+      const tips = loadTips();
+      tips.splice(parseInt(btn.dataset.idx), 1);
+      saveTips(tips);
+      renderTips();
+    };
+  });
+}
+
+document.getElementById('tip-add-btn').onclick = () => {
+  const mapIn = document.getElementById('tip-map');
+  const diffIn = document.getElementById('tip-diff');
+  const typeIn = document.getElementById('tip-type');
+  const textIn = document.getElementById('tip-text');
+  if (!textIn.value.trim()) return;
+  const tips = loadTips();
+  tips.push({map: mapIn.value.trim(), diff: diffIn.value.trim(), type: typeIn.value.trim(), text: textIn.value.trim()});
+  saveTips(tips);
+  mapIn.value = '';
+  diffIn.value = '';
+  typeIn.value = '';
+  textIn.value = '';
+  renderTips();
+};
+
+renderTips();
+</script>
 </body>
 </html>
