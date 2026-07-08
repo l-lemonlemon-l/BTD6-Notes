@@ -292,6 +292,67 @@
     <div class="upgrade-panel" id="upgrade-panel"></div>
   </section>
 
+  <section id="paragons">
+    <div class="section-head">
+      <h2><i class="ti ti-crown"></i> Paragons</h2>
+      <button class="share-btn" data-share="#paragons"><i class="ti ti-link"></i> Share</button>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Requires all three tier 5 versions of a tower on the map at once. Only 13 towers have one so far.</p>
+
+    <div class="card">
+      <p class="card-title">Apex Plasma Master <span class="tag tag-ddt">Dart Monkey</span></p>
+      <p>Combines Ultra-Juggernaut, Plasma Monkey Fan Club, and Crossbow Master. Cheapest Paragon in the game — a solid first pick to learn the mechanic.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Glaive Dominus <span class="tag tag-ddt">Boomerang Monkey</span></p>
+      <p>Combines Glaive Lord, Perma Charge, and MOAB Domination. Strong all-round stalling and DPS Paragon, popular in Freeplay.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Ballistic Obliteration Missile Bunker <span class="tag tag-ddt">Bomb Shooter</span></p>
+      <p>Combines Bloon Crush, MOAB Eliminator, and Bomb Blitz. Slow-firing but massively hard-hitting homing missiles that spawn waves of cluster bombs.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Crucible of Steel and Flame <span class="tag tag-ddt">Tack Shooter</span></p>
+      <p>Combines Inferno Ring, Super Maelstrom, and The Tack Zone. Second cheapest Paragon — most of its power comes from its two abilities.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Master Builder <span class="tag tag-ddt">Engineer Monkey</span></p>
+      <p>Combines Sentry Champion, Ultraboost, and XXXL Trap. Stuns almost anything with its nailgun and can deploy powerful Mega Sentries anywhere on the map.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Magus Perfectus <span class="tag tag-ddt">Wizard Monkey</span></p>
+      <p>Combines Archmage, Wizard Lord Phoenix, and Prince of Darkness. Runs on a mana mechanic, swapping between attack and drain modes with two powerful abilities.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Ascended Shadow <span class="tag tag-ddt">Ninja Monkey</span></p>
+      <p>Combines Grandmaster Ninja, Grand Saboteur, and Master Bomber. Grants global Camo detection to every tower on screen — a Freeplay staple.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Goliath Doomship <span class="tag tag-ddt">Monkey Ace</span></p>
+      <p>Combines Sky Shredder, Tsar Bomba, and Flying Fortress. The most expensive Paragon, but widely considered the strongest against Boss Bloons.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Herald of Everfrost <span class="tag tag-ddt">Ice Monkey</span></p>
+      <p>Combines the Ice Monkey's three tier 5 upgrades. Freezes and shreds huge groups of Bloons across the whole map.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Mega Massive Munitions Factory <span class="tag tag-ddt">Spike Factory</span></p>
+      <p>Combines Super Mines, Carpet of Spikes, and Perma-Spike. Stockpiles giant mines and lays a permanent damaging carpet across the whole track.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Nautic Siege Core <span class="tag tag-ddt">Monkey Sub</span></p>
+      <p>Combines Energizer, Pre-Emptive Strike, and Sub Commander. Supports the whole map with cooldown reduction while still hitting hard on its own.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Navarch of the Seas <span class="tag tag-ddt">Monkey Buccaneer</span></p>
+      <p>Combines Carrier Flagship, Pirate Lord, and Trade Empire. Can hook down and one-shot BADs — one of the most satisfying Paragons to use.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Root of all Nature <span class="tag tag-ddt">Druid</span></p>
+      <p>Combines Monarch of Storms, Spirit of the Forest, and Avatar of Wrath. The newest Paragon, added in version 54.0.</p>
+    </div>
+  </section>
+
   <section id="towers">
     <div class="section-head">
       <h2><i class="ti ti-shield-star"></i> Towers</h2>
@@ -505,13 +566,13 @@ const towerUpgrades = {
     [ {n:"Fast Firing", d:"Shoots faster.", c:"$200"}, {n:"Even Faster Firing", d:"Shoots even faster.", c:"$450"}, {n:"Semi-Automatic", d:"Attacks 3x as fast.", c:"$2,500"}, {n:"Fully Automatic Rifle", d:"Rapid popping power.", c:"$10,000"}, {n:"Elite Defender", d:"Extreme fire rate plus lives-lost speed burst.", c:"$50,000"} ]
   ]},
   "Monkey Sub": { complete: true, paths: [
+    [ {n:"Longer Range", d:"Longer range.", c:"$110"}, {n:"Advanced Intel", d:"Extends targeting radius to other towers' range.", c:"$450"}, {n:"Submerge and Support", d:"Submerges to permanently reveal Camo in range, no attack while submerged.", c:"$700"}, {n:"Bloontonium Reactor", d:"Submerged detection, pops Bloons, cuts nearby water Monkeys' cooldowns.", c:"$2,800"}, {n:"Energizer", d:"Massive pierce boost, cuts everyone's ability cooldowns, faster Hero XP.", c:"$45,000"} ],
     [ {n:"Barbed Darts", d:"Darts pop 3 extra Bloons; buffs other weapons' pierce.", c:"$300"}, {n:"Heat-tipped Darts", d:"Darts pop Frozen and Lead Bloons.", c:"$500"}, {n:"Ballistic Missile", d:"Seeking missile, extra MOAB and Ceramic damage.", c:"$1,700"}, {n:"First Strike Capability", d:"Ability: devastating missile at the biggest Bloon on screen.", c:"$5,500"}, {n:"Pre-Emptive Strike", d:"Auto-fires a powerful missile the moment a MOAB-class Bloon spawns.", c:"$48,000"} ],
-    [ {n:"Longer Range", d:"Increases range.", c:"$150"}, {n:"Advanced Intel", d:"Extends targeting radius to other towers' range.", c:"$450"}, {n:"Submerge and Support", d:"Submerges to permanently reveal Camo in range, no attack while submerged.", c:"$3,200"}, {n:"Bloontonium Reactor", d:"Submerged detection, pops Bloons, cuts nearby water Monkeys' cooldowns.", c:"$5,000"}, {n:"Nautic Siege Core", d:"Massive range/power boost with strong synergy for nearby towers.", c:"$65,000"} ],
-    [ {n:"Twin Guns", d:"Second gun doubles attack speed.", c:"$150"}, {n:"Airburst Darts", d:"Darts split into 3 on impact.", c:"$1,150"}, {n:"Triple Guns", d:"Third gun for even faster firing.", c:"$1,500"}, {n:"Armor Piercing Darts", d:"More damage/popping power, bonus vs MOAB-class.", c:"$4,600"}, {n:"Sub Commander", d:"Buffs pierce/damage for itself and nearby Subs.", c:"$52,000"} ]
+    [ {n:"Twin Guns", d:"Second gun doubles attack speed.", c:"$150"}, {n:"Airburst Darts", d:"Darts split into 3 on impact.", c:"$1,150"}, {n:"Triple Guns", d:"Third gun for even faster firing.", c:"$1,500"}, {n:"Armor Piercing Darts", d:"More damage/popping power, bonus vs MOAB-class.", c:"$4,600"}, {n:"Sub Commander", d:"Doubles damage and adds pierce for itself and nearby Subs.", c:"$40,000"} ]
   ]},
   "Monkey Buccaneer": { complete: true, paths: [
-    [ {n:"Faster Shooting", d:"All cannons fire faster.", c:"$100"}, {n:"Double Shot", d:"Fires more shots per volley.", c:"$400"}, {n:"Aircraft Carrier", d:"Launches strafing fighter planes and MOAB missiles.", c:"$3,150"}, {n:"Carrier Flagship", d:"More damage, boosts speed of nearby water towers and Aces.", c:"$16,000"}, {n:"Navarch of the Seas", d:"The strongest naval tower in the fleet.", c:"$70,000"} ],
-    [ {n:"Grape Shot", d:"5-shot grape spray added.", c:"$400"}, {n:"Hot Shot", d:"Burning grapeshot pops Lead, sets Bloons alight.", c:"$550"}, {n:"Monkey Pirates", d:"Cannons added, hook ability pulls down MOAB-class.", c:"$3,850"}, {n:"Pirate Lord", d:"Multiple hooks, extra cash from downed MOAB-class.", c:"$14,000"}, {n:"Flagship Armada", d:"Overwhelming naval firepower against everything on the water.", c:"$50,000"} ],
+    [ {n:"Faster Shooting", d:"All cannons fire faster.", c:"$100"}, {n:"Double Shot", d:"Fires more shots per volley.", c:"$400"}, {n:"Destroyer", d:"5x attack speed, hits Frozen Bloons.", c:"$1,750"}, {n:"Aircraft Carrier", d:"Launches strafing fighter planes and MOAB missiles.", c:"$3,150"}, {n:"Carrier Flagship", d:"More damage, boosts speed of nearby water towers and Aces.", c:"$16,000"} ],
+    [ {n:"Grape Shot", d:"5-shot grape spray added.", c:"$400"}, {n:"Hot Shot", d:"Burning grapeshot pops Lead, sets Bloons alight.", c:"$550"}, {n:"Monkey Pirates", d:"Cannons added, hook ability pulls down MOAB-class.", c:"$3,850"}, {n:"Pirate Lord", d:"Multiple hooks, extra cash from downed MOAB-class.", c:"$14,000"} ],
     [ {n:"Long Range", d:"Much longer range, faster/piercier shots.", c:"$300"}, {n:"Crow's Nest", d:"Can hit Camo Bloons.", c:"$450"}, {n:"Merchantman", d:"Generates cash each round automatically.", c:"$1,800"}, {n:"Favored Trades", d:"Faster attacks, big income, buffs nearby sell value.", c:"$4,500"}, {n:"Trade Empire", d:"Massive income, boosts other Merchantmen nearby.", c:"$55,000"} ]
   ]},
   "Monkey Ace": { complete: true, paths: [
