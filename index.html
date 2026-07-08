@@ -100,6 +100,34 @@
   .section-head { display: flex; align-items: center; margin-bottom: 1rem; }
   .section-head h2 { margin: 0; }
   .signin-note { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+  .upgrade-tower-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.2rem; }
+  .upgrade-tower-btn {
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer;
+  }
+  .upgrade-tower-btn.active { border-color: var(--green); color: var(--green); }
+  .upgrade-tower-btn:hover { border-color: var(--green); }
+  .upgrade-tower-btn.incomplete::after { content: " *"; color: var(--amber); }
+  .upgrade-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .upgrade-path { display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .upgrade-path::before {
+    content: ''; position: absolute; top: 20px; bottom: 20px; left: 19px;
+    width: 2px; background: var(--border); z-index: 0;
+  }
+  .upgrade-tier {
+    display: flex; gap: 10px; align-items: flex-start; position: relative; z-index: 1;
+  }
+  .upgrade-badge {
+    flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--panel-2); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px; color: var(--muted);
+  }
+  .upgrade-tier.owned .upgrade-badge { border-color: var(--green); color: var(--green); background: rgba(143,209,79,0.12); }
+  .upgrade-tier-body { padding-top: 4px; }
+  .upgrade-tier-name { font-weight: 600; font-size: 13px; margin: 0; }
+  .upgrade-tier-desc { font-size: 12px; color: var(--muted); margin: 3px 0 0; line-height: 1.5; }
+  .upgrade-tier-cost { font-size: 11px; color: var(--amber); margin: 3px 0 0; font-weight: 600; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 3rem; }
 </style>
 </head>
@@ -252,6 +280,16 @@
       <p>First appears <b>round 21+</b>, weekend event only — not in CHIMPS, Deflation, or Sandbox.</p>
       <p>Takes only 1 damage per hit regardless of attack power, and evolves (gains new properties) each time it spawns. Releases nothing — no lives lost if it escapes.</p>
     </div>
+  </section>
+
+  <section id="upgrades">
+    <div class="section-head">
+      <h2><i class="ti ti-stairs-up"></i> Upgrade Paths</h2>
+      <button class="share-btn" data-share="#upgrades"><i class="ti ti-link"></i> Share</button>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Click a tower to see its 3 paths, tier by tier. Towers marked * still need their full tier data filled in.</p>
+    <div class="upgrade-tower-list" id="upgrade-tower-list"></div>
+    <div class="upgrade-panel" id="upgrade-panel"></div>
   </section>
 
   <section id="towers">
@@ -423,6 +461,118 @@ onAuthStateChanged(auth, (user) => {
   currentUser = user;
   renderAuthArea();
 });
+
+// ---------- Tower upgrade paths ----------
+const towerUpgrades = {
+  "Dart Monkey": { complete: true, paths: [
+    [ {n:"Sharp Shots", d:"Can pop 1 extra Bloon per shot.", c:"$140"}, {n:"Razor Sharp Shots", d:"Can pop 2 more Bloons per shot.", c:"$200"}, {n:"Spike-o-pult", d:"Converts into a slower Spike-o-pult hurling large spiked balls that rebound off obstacles.", c:"$320"}, {n:"Juggernaut", d:"Hurls a giant spiked ball, excels at Ceramic and Fortified Bloons.", c:"$1,800"}, {n:"Ultra-Juggernaut", d:"Ball splits twice into 6 Juggernaut balls.", c:"$15,000"} ],
+    [ {n:"Quick Shots", d:"Shoots 15% faster.", c:"$100"}, {n:"Very Quick Shots", d:"Shoots 33% faster.", c:"$190"}, {n:"Triple Shot", d:"Throws 3 darts at a time.", c:"$450"}, {n:"Super Monkey Fan Club", d:"Ability: converts up to 10 nearby Dart Monkeys into Super Monkeys for 15s.", c:"$7,200"}, {n:"Plasma Monkey Fan Club", d:"Elite membership grants even more power.", c:"$45,000"} ],
+    [ {n:"Long Range Darts", d:"Shoots further than normal.", c:"$90"}, {n:"Enhanced Eyesight", d:"Shoots further and detects Camo Bloons.", c:"$200"}, {n:"Crossbow", d:"Long range crossbow pops 3 layers per hit.", c:"$575"}, {n:"Sharp Shooter", d:"Attacks faster with powerful Crit shots.", c:"$2,050"}, {n:"Crossbow Master", d:"Shoots really fast, devastates most Bloon types.", c:"$21,500"} ]
+  ]},
+  "Boomerang Monkey": { complete: true, paths: [
+    [ {n:"Improved Rangs", d:"Pops up to 8 Bloons per throw.", c:"$200"}, {n:"Glaives", d:"Throws bigger, faster glaives.", c:"$280"}, {n:"Glaive Ricochet", d:"Glaives bounce Bloon to Bloon automatically.", c:"$600"}, {n:"M.O.A.R Glaives", d:"Greatly enhances Glaive Ricochet.", c:"$2,000"}, {n:"Glaive Lord", d:"3 orbiting glaives shred anything nearby, rip through MOAB-class.", c:"$32,500"} ],
+    [ {n:"Faster Throwing", d:"Throws boomerangs faster.", c:"$175"}, {n:"Faster Rangs", d:"Boomerangs fire and travel faster.", c:"$250"}, {n:"Bionic Boomerang", d:"Bionic arm throws extremely fast, more MOAB damage.", c:"$1,250"}, {n:"Turbo Charge", d:"Ability: incredibly fast attacks for 10s.", c:"$4,200"}, {n:"Perma Charge", d:"Permanent super fast attack speed.", c:"$35,000"} ],
+    [ {n:"Long Range Rangs", d:"Throws boomerangs further.", c:"$100"}, {n:"Red Hot Rangs", d:"Pops Frozen and Lead Bloons, more damage.", c:"$300"}, {n:"Kylie Boomerang", d:"Heavy boomerang follows a straight path.", c:"$1,300"}, {n:"MOAB Press", d:"Hits MOAB-class multiple times, knocks back.", c:"$2,700"}, {n:"MOAB Domination", d:"Knockback kylies trigger more, extra damage.", c:"$50,000"} ]
+  ]},
+  "Bomb Shooter": { complete: true, paths: [
+    [ {n:"Bigger Bombs", d:"Larger blast area and popping power.", c:"$250"}, {n:"Heavy Bombs", d:"Smash 2 layers at once.", c:"$650"}, {n:"Really Big Bombs", d:"Greater damage, knocks Bloons back.", c:"$1,100"}, {n:"Bloon Impact", d:"Explosions stun Bloons, range increased.", c:"$2,800"}, {n:"Bloon Crush", d:"Massive damage, can stun MOAB-class.", c:"$55,000"} ],
+    [ {n:"Faster Reload", d:"Reloads faster.", c:"$250"}, {n:"Missile Launcher", d:"Missiles fire faster, fly faster, more range.", c:"$400"}, {n:"MOAB Mauler", d:"Much more damage to MOAB-class.", c:"$1,000"}, {n:"MOAB Assassin", d:"Ability: missile does massive MOAB damage.", c:"$3,450"}, {n:"MOAB Eliminator", d:"Assassinate deals 6x damage, short cooldown.", c:"$26,000"} ],
+    [ {n:"Extra Range", d:"Increases attack range.", c:"$200"}, {n:"Frag Bombs", d:"Sharp fragments pop more Bloons.", c:"$300"}, {n:"Cluster Bombs", d:"Throws secondary bombs every shot.", c:"$700"}, {n:"Recursive Cluster", d:"Every 2nd shot sends more cluster bombs.", c:"$2,500"}, {n:"Bomb Blitz", d:"Much more damage, auto-triggers Bomb Storm on life loss.", c:"$30,000"} ]
+  ]},
+  "Glue Gunner": { complete: true, paths: [
+    [ {n:"Glue Soak", d:"Glue soaks through all layers.", c:"$200"}, {n:"Corrosive Glue", d:"Glued Bloons pop a layer every few seconds.", c:"$300"}, {n:"Bloon Dissolver", d:"Glues 1 extra Bloon, melts 2 layers/sec.", c:"$2,000"}, {n:"Bloon Liquefier", d:"10 pops/sec, drops acid after a kill.", c:"$5,000"}, {n:"The Bloon Solver", d:"The ultimate glue solution.", c:"$22,500"} ],
+    [ {n:"Bigger Globs", d:"Coats 2 Bloons per shot.", c:"$100"}, {n:"Glue Splatter", d:"Splatters glue across up to 5 Bloons.", c:"$970"}, {n:"Glue Hose", d:"Shoots glue 3x as fast, wider area.", c:"$1,950"}, {n:"Glue Strike", d:"Ability: glues all Bloons on screen, extra damage taken.", c:"$4,000"}, {n:"Glue Storm", d:"Ability: pelts the whole screen with glue for 20s.", c:"$16,000"} ],
+    [ {n:"Stickier Glue", d:"Glue effect lasts much longer.", c:"$280"}, {n:"Stronger Glue", d:"Slows Bloons even more.", c:"$400"}, {n:"MOAB Glue", d:"Glue sticks to MOAB-class Bloons.", c:"$3,600"}, {n:"Relentless Glue", d:"Popping a glued Bloon stuns nearby Bloons.", c:"$4,000"}, {n:"Super Glue", d:"Temporarily immobilizes all affected Bloons.", c:"$24,000"} ]
+  ]},
+  "Desperado": { complete: true, paths: [
+    [ {n:"Quickdraw", d:"Attacks faster the further Bloons are.", c:"$200"}, {n:"Standoff", d:"Attacks faster the fewer Bloons in range.", c:"$200"}, {n:"Big Iron", d:"6-shot revolver, even faster at low density.", c:"$1,200"}, {n:"Twin Sixes", d:"Twin higher-damage revolvers.", c:"$5,800"}, {n:"The Blazing Sun", d:"Shoots so fast the revolvers catch alight.", c:"$16,500"} ],
+    [ {n:"Eagle Eye", d:"Can see Camo Bloons.", c:"$150"}, {n:"Bullseye", d:"Chance to Crit, higher at range.", c:"$350"}, {n:"Deadeye", d:"Ability + long range rifle, pops Lead and Fortified.", c:"$3,000"}, {n:"Bounty Hunter", d:"Ability: marks Bloons for bonus damage/cash.", c:"$6,000"}, {n:"Golden Justice", d:"Longarm hits clean through an army of Bloons.", c:"$42,000"} ],
+    [ {n:"Wanderer", d:"Attacks faster alone, less so near other Monkeys.", c:"$220"}, {n:"Nomad", d:"Faster with more Bloons in range; bonus on life loss.", c:"$280"}, {n:"Enforcer", d:"Shotgun knocks back close Bloons.", c:"$2,100"}, {n:"Avenger", d:"Shrapnel knocks back MOABs; life-loss mitigation.", c:"$9,500"}, {n:"The Desert Phantom", d:"Hits so hard it's like a mine blast.", c:"$31,000"} ]
+  ]},
+  "Ice Monkey": { complete: true, paths: [
+    [ {n:"Permafrost", d:"Bloons move slowly even after thawing.", c:"$150"}, {n:"Cold Snap", d:"Can freeze and pop Lead and Camo Bloons.", c:"$350"}, {n:"Ice Shards", d:"Strips Camo/Regrow, shards fly out on pop.", c:"$1,500"}, {n:"Embrittlement", d:"Hits MOAB-class; brittles Bloons, strips Lead briefly.", c:"$2,300"}, {n:"Super Brittle", d:"Huge damage while frozen; shreds Ceramics.", c:"$28,000"} ],
+    [ {n:"—", d:"Path 2 tier data not yet added.", c:"—"} ],
+    [ {n:"—", d:"Path 3 tier data not yet added.", c:"—"} ]
+  ]},
+  "Heli Pilot": { complete: true, paths: [
+    [ {n:"Quad Darts", d:"Shoots 4 darts per volley instead of 2.", c:"$800"}, {n:"Pursuit", d:"Seeks and pursues Bloons automatically.", c:"$500"}, {n:"Razor Rotors", d:"Rotor blades rip Bloons, including Lead/Frozen.", c:"$1,850"}, {n:"Apache Dartship", d:"Missile array + machine guns.", c:"$19,600"}, {n:"Apache Prime", d:"Bloons wish they'd never been inflated.", c:"$45,000"} ],
+    [ {n:"Bigger Jets", d:"Moves much faster.", c:"$300"}, {n:"IFR", d:"Detects and shoots Camo Bloons.", c:"$600"}, {n:"Downdraft", d:"Blows Bloons back toward the entrance.", c:"$3,500"}, {n:"Support Chinook", d:"Big knockback, drops crates, redeploys towers.", c:"$9,500"}, {n:"Special Poperations", d:"Deploys a Monkey Marine with a machine gun.", c:"$30,000"} ],
+    [ {n:"Faster Darts", d:"Darts fly faster.", c:"$250"}, {n:"Faster Firing", d:"Faster attack speed overall.", c:"$350"}, {n:"MOAB Shove", d:"Collides with and shoves MOAB-class Bloons.", c:"$3,400"}, {n:"Comanche Defense", d:"Auto-calls mini Comanches when needed.", c:"$8,500"}, {n:"Comanche Commander", d:"Upgraded weapons, 3 more Comanches permanently.", c:"$35,000"} ]
+  ]},
+  "Engineer Monkey": { complete: true, paths: [
+    [ {n:"Sentry Gun", d:"Deploys temporary sentries near the track.", c:"$500"}, {n:"Faster Engineering", d:"Produces sentries/foam/traps more often.", c:"$400"}, {n:"Sprockets", d:"Increases sentry and Engineer attack speed.", c:"$575"}, {n:"Sentry Expert", d:"Sentries deploy with different damage types.", c:"$2,500"}, {n:"Sentry Champion", d:"Super-powerful, unstable sentries.", c:"$32,000"} ],
+    [ {n:"Larger Service Area", d:"Shoots further, sentries in a larger area.", c:"$250"}, {n:"Deconstruction", d:"Extra damage to MOAB-class/Fortified.", c:"$350"}, {n:"Cleansing Foam", d:"Removes Camo/Regrow, pops Lead.", c:"$900"}, {n:"Overclock", d:"Ability: supercharge another tower's attack speed.", c:"$13,500"}, {n:"Ultraboost", d:"Permanent boost stacks with each overclock.", c:"$72,000"} ],
+    [ {n:"Oversize Nails", d:"Pops 8 Bloons at once, including frozen.", c:"$450"}, {n:"Pin", d:"Pins Bloons in place briefly when struck.", c:"$220"}, {n:"Double Gun", d:"Two guns for twice the fun.", c:"$450"}, {n:"Bloon Trap", d:"Captures Bloons until full, collect for cash.", c:"$3,600"}, {n:"XXXL Trap", d:"Huge traps for some of the biggest Bloons.", c:"$45,000"} ]
+  ]},
+  "Druid": { complete: true, paths: [
+    [ {n:"Hard Thorns", d:"Pops 2 Bloons each, any Bloon type.", c:"$350"}, {n:"Heart of Thunder", d:"Lightning arcs from Bloon to Bloon.", c:"$850"}, {n:"Druid of the Storm", d:"Gusts blow Bloons back off the track.", c:"$1,700"}, {n:"Ball Lightning", d:"Camo detection, freezing lightning balls.", c:"$4,500"}, {n:"Monarch of Storms", d:"Massive superstorm barrage, blows Bloons back.", c:"$60,000"} ],
+    [ {n:"Thorn Swarm", d:"8 thorns per shot instead of 5.", c:"$250"}, {n:"Heart of Oak", d:"Converts Regrow Bloons, gains pierce with lives.", c:"$350"}, {n:"Druid of the Jungle", d:"Vine entangles and crushes Bloons.", c:"$1,050"}, {n:"Jungle's Bounty", d:"Cash/lives per round, ability grabs Bloons.", c:"$4,900"}, {n:"Spirit of the Forest", d:"Thorned vines deal constant damage.", c:"$35,000"} ],
+    [ {n:"Druidic Reach", d:"Large range increase.", c:"$100"}, {n:"Heart of Vengeance", d:"Attack speed scales with lives lost.", c:"$300"}, {n:"Druid of Wrath", d:"Gains attack speed while attacking.", c:"$600"}, {n:"Poplust", d:"Boosts nearby Druids, stacks up to 5x.", c:"$2,350"}, {n:"Avatar of Wrath", d:"More Bloons on screen, more damage.", c:"$45,000"} ]
+  ]},
+  "Alchemist": { complete: true, paths: [
+    [ {n:"Larger Potions", d:"Splash over a larger area.", c:"$250"}, {n:"Acidic Mixture Dip", d:"Buffs a Monkey to pop Lead, extra vs Ceramic/MOAB.", c:"$350"}, {n:"Berserker Brew", d:"Buffs a Monkey's damage/range/speed briefly.", c:"$1,400"}, {n:"Stronger Stimulant", d:"Even more powerful, longer buff.", c:"$2,850"}, {n:"Permanent Brew", d:"Berserker brew becomes permanent.", c:"$48,000"} ],
+    [ {n:"Stronger Acid", d:"Acid dissolves Bloons faster.", c:"$250"}, {n:"Perishing Potions", d:"Extra MOAB damage, strips Fortified.", c:"$475"}, {n:"Unstable Concoction", d:"MOAB-class explodes big when popped.", c:"$2,800"}, {n:"Transforming Tonic", d:"Ability: becomes an attack monster for 20s.", c:"$4,200"}, {n:"Total Transformation", d:"Transforms 5 nearby Monkeys into monsters.", c:"$45,000"} ],
+    [ {n:"Faster Throwing", d:"Throws and attacks faster.", c:"$650"}, {n:"Acid Pool", d:"Spills pools of acid on the track.", c:"$450"}, {n:"Lead to Gold", d:"One-shots Lead Bloons, generates cash.", c:"$1,000"}, {n:"Rubber to Gold", d:"Disables immunities, more cash per pop.", c:"$2,750"}, {n:"Bloon Master Alchemist", d:"Converts affected Bloons to Red Bloons.", c:"$40,000"} ]
+  ]},
+  "Banana Farm": { complete: true, paths: [
+    [ {n:"Increased Production", d:"2 extra Banana bunches per round.", c:"$500"}, {n:"Greater Production", d:"2 more extra bunches per round.", c:"$600"}, {n:"Banana Plantation", d:"16 bunches per round.", c:"$3,000"}, {n:"Banana Research Facility", d:"5 crates/round worth $300 each.", c:"$19,000"}, {n:"Banana Central", d:"You want Banana? We have Banana!", c:"$115,000"} ],
+    [ {n:"Long Life Bananas", d:"Bananas last 30s instead of 15.", c:"$300"}, {n:"Valuable Bananas", d:"25% more cash per bunch.", c:"$800"}, {n:"Monkey Bank", d:"Stores cash, earns 15% interest/round.", c:"$3,650"}, {n:"IMF Loan", d:"Ability: gives $9,000, paid back over time.", c:"$7,200"}, {n:"Monkey-Nomics", d:"For when you're too big to fail.", c:"$100,000"} ],
+    [ {n:"EZ Collect", d:"Larger collect radius, auto-collect half value.", c:"$250"}, {n:"Banana Salvage", d:"Auto-collects almost full value, +10% sellback.", c:"$400"}, {n:"Marketplace", d:"Generates money each round automatically.", c:"$2,700"}, {n:"Central Market", d:"Heaps of money, +10% Merchantman income.", c:"$15,000"}, {n:"Monkey Wall Street", d:"Colossal income, generates lives, collects in radius.", c:"$70,000"} ]
+  ]},
+  "Beast Handler": { complete: true, paths: [
+    [ {n:"Piranha", d:"Small feisty fish leaps at Bloons.", c:"$160"}, {n:"Barracuda", d:"Slaps Bloons back, pops multiple layers.", c:"$810"}, {n:"Great White", d:"Crushes Lead Bloons, drags back to water.", c:"$2,010"}, {n:"Orca", d:"Drags nearly all Bloons into the depths.", c:"$12,500"}, {n:"Megalodon", d:"Colossal shark, needs 3 more Orca Handlers.", c:"$45,000"} ],
+    [ {n:"Microraptor", d:"Sharp-clawed little dinosaur.", c:"$175"}, {n:"Adasaurus", d:"High short-range damage, tears through Lead.", c:"$830"}, {n:"Velociraptor", d:"Slashes and chomps, bonus vs stunned Bloons.", c:"$2,065"}, {n:"Tyrannosaurus Rex", d:"Huge bite damage, Stomp ability stuns up to ZOMG.", c:"$9,500"}, {n:"Giganotosaurus", d:"Shreds almost any Bloon; map-wide Stomp.", c:"$60,000"} ],
+    [ {n:"Gyrfalcon", d:"Grabs and moves Bloons to a drop-off point.", c:"$190"}, {n:"Horned Owl", d:"Grabs Ceramics, detects Camo.", c:"$860"}, {n:"Golden Eagle", d:"Grabs large numbers at once, low MOAB tiers.", c:"$2,120"}, {n:"Giant Condor", d:"Picks up smaller MOAB-class Bloons.", c:"$9,000"}, {n:"Pouākai", d:"Legendary bird, destroys almost any Bloon size.", c:"$30,000"} ]
+  ]},
+  "Dartling Gunner": { complete: true, paths: [
+    [ {n:"Focused Firing", d:"Increases accuracy.", c:"$300"}, {n:"Laser Shock", d:"Shocks Bloons into popping again 1s later.", c:"$900"}, {n:"Laser Cannon", d:"Powerful lasers, pops Frozen, more MOAB damage.", c:"$3,000"}, {n:"Plasma Accelerator", d:"Concentrated beam to a single point.", c:"$11,750"}, {n:"Ray of Doom", d:"Solid line of annihilation.", c:"$75,000"} ],
+    [ {n:"Advanced Targeting", d:"Hits Camo Bloons.", c:"$250"}, {n:"Faster Barrel Spin", d:"Fires much faster.", c:"$950"}, {n:"Hydra Rocket Pods", d:"Bloontonium missiles hit all Bloon types.", c:"$4,500"}, {n:"Rocket Storm", d:"Ability: powerful rocket storm in a wide cone.", c:"$5,000"}, {n:"M.A.D", d:"Mega missiles, extreme MOAB-class damage.", c:"$65,000"} ],
+    [ {n:"Faster Swivel", d:"Barrel swivels much faster.", c:"$150"}, {n:"Powerful Darts", d:"Faster darts, pops frozen, 3 Bloons each.", c:"$1,200"}, {n:"Buckshot", d:"Shoots deadly buckshot blasts.", c:"$3,000"}, {n:"Bloon Area Denial System", d:"4-barreled auto-cannon.", c:"$12,000"}, {n:"Bloon Exclusion Zone", d:"6 barrels, massive damage.", c:"$58,000"} ]
+  ]}
+};
+
+function renderUpgradeTowerList() {
+  const list = document.getElementById('upgrade-tower-list');
+  list.innerHTML = '';
+  Object.keys(towerUpgrades).forEach((name, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'upgrade-tower-btn' + (idx === 0 ? ' active' : '');
+    btn.textContent = name;
+    btn.dataset.tower = name;
+    btn.onclick = () => selectUpgradeTower(name);
+    list.appendChild(btn);
+  });
+}
+
+function selectUpgradeTower(name) {
+  document.querySelectorAll('.upgrade-tower-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tower === name);
+  });
+  const data = towerUpgrades[name];
+  const panel = document.getElementById('upgrade-panel');
+  panel.innerHTML = '';
+  data.paths.forEach(path => {
+    const col = document.createElement('div');
+    col.className = 'upgrade-path';
+    path.forEach((tier, i) => {
+      const row = document.createElement('div');
+      row.className = 'upgrade-tier';
+      row.innerHTML = `
+        <div class="upgrade-badge">${i + 1}</div>
+        <div class="upgrade-tier-body">
+          <p class="upgrade-tier-name">${tier.n}</p>
+          <p class="upgrade-tier-desc">${tier.d}</p>
+          <p class="upgrade-tier-cost">${tier.c}</p>
+        </div>
+      `;
+      col.appendChild(row);
+    });
+    panel.appendChild(col);
+  });
+}
+
+renderUpgradeTowerList();
+selectUpgradeTower(Object.keys(towerUpgrades)[0]);
 
 // ---------- Share buttons ----------
 document.querySelectorAll('.share-btn').forEach(btn => {
