@@ -287,7 +287,7 @@
       <h2><i class="ti ti-stairs-up"></i> Upgrade Paths</h2>
       <button class="share-btn" data-share="#upgrades"><i class="ti ti-link"></i> Share</button>
     </div>
-    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Click a tower to see its 3 paths, tier by tier. Towers marked * still need their full tier data filled in.</p>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Click a tower to see its 3 paths, tier by tier. 13 towers also show their Paragon below.</p>
     <div class="upgrade-tower-list" id="upgrade-tower-list"></div>
     <div class="upgrade-panel" id="upgrade-panel"></div>
   </section>
@@ -525,17 +525,17 @@ onAuthStateChanged(auth, (user) => {
 
 // ---------- Tower upgrade paths ----------
 const towerUpgrades = {
-  "Dart Monkey": { complete: true, paths: [
+  "Dart Monkey": { complete: true, paragon: {n:"Apex Plasma Master", d:"Combines Ultra-Juggernaut, Plasma Monkey Fan Club, and Crossbow Master. Cheapest Paragon in the game."}, paths: [
     [ {n:"Sharp Shots", d:"Can pop 1 extra Bloon per shot.", c:"$140"}, {n:"Razor Sharp Shots", d:"Can pop 2 more Bloons per shot.", c:"$200"}, {n:"Spike-o-pult", d:"Converts into a slower Spike-o-pult hurling large spiked balls that rebound off obstacles.", c:"$320"}, {n:"Juggernaut", d:"Hurls a giant spiked ball, excels at Ceramic and Fortified Bloons.", c:"$1,800"}, {n:"Ultra-Juggernaut", d:"Ball splits twice into 6 Juggernaut balls.", c:"$15,000"} ],
     [ {n:"Quick Shots", d:"Shoots 15% faster.", c:"$100"}, {n:"Very Quick Shots", d:"Shoots 33% faster.", c:"$190"}, {n:"Triple Shot", d:"Throws 3 darts at a time.", c:"$450"}, {n:"Super Monkey Fan Club", d:"Ability: converts up to 10 nearby Dart Monkeys into Super Monkeys for 15s.", c:"$7,200"}, {n:"Plasma Monkey Fan Club", d:"Elite membership grants even more power.", c:"$45,000"} ],
     [ {n:"Long Range Darts", d:"Shoots further than normal.", c:"$90"}, {n:"Enhanced Eyesight", d:"Shoots further and detects Camo Bloons.", c:"$200"}, {n:"Crossbow", d:"Long range crossbow pops 3 layers per hit.", c:"$575"}, {n:"Sharp Shooter", d:"Attacks faster with powerful Crit shots.", c:"$2,050"}, {n:"Crossbow Master", d:"Shoots really fast, devastates most Bloon types.", c:"$21,500"} ]
   ]},
-  "Boomerang Monkey": { complete: true, paths: [
+  "Boomerang Monkey": { complete: true, paragon: {n:"Glaive Dominus", d:"Combines Glaive Lord, Perma Charge, and MOAB Domination. Strong all-round stalling and DPS."}, paths: [
     [ {n:"Improved Rangs", d:"Pops up to 8 Bloons per throw.", c:"$200"}, {n:"Glaives", d:"Throws bigger, faster glaives.", c:"$280"}, {n:"Glaive Ricochet", d:"Glaives bounce Bloon to Bloon automatically.", c:"$600"}, {n:"M.O.A.R Glaives", d:"Greatly enhances Glaive Ricochet.", c:"$2,000"}, {n:"Glaive Lord", d:"3 orbiting glaives shred anything nearby, rip through MOAB-class.", c:"$32,500"} ],
     [ {n:"Faster Throwing", d:"Throws boomerangs faster.", c:"$175"}, {n:"Faster Rangs", d:"Boomerangs fire and travel faster.", c:"$250"}, {n:"Bionic Boomerang", d:"Bionic arm throws extremely fast, more MOAB damage.", c:"$1,250"}, {n:"Turbo Charge", d:"Ability: incredibly fast attacks for 10s.", c:"$4,200"}, {n:"Perma Charge", d:"Permanent super fast attack speed.", c:"$35,000"} ],
     [ {n:"Long Range Rangs", d:"Throws boomerangs further.", c:"$100"}, {n:"Red Hot Rangs", d:"Pops Frozen and Lead Bloons, more damage.", c:"$300"}, {n:"Kylie Boomerang", d:"Heavy boomerang follows a straight path.", c:"$1,300"}, {n:"MOAB Press", d:"Hits MOAB-class multiple times, knocks back.", c:"$2,700"}, {n:"MOAB Domination", d:"Knockback kylies trigger more, extra damage.", c:"$50,000"} ]
   ]},
-  "Bomb Shooter": { complete: true, paths: [
+  "Bomb Shooter": { complete: true, paragon: {n:"Ballistic Obliteration Missile Bunker", d:"Combines Bloon Crush, MOAB Eliminator, and Bomb Blitz. Slow but massively hard-hitting homing missiles."}, paths: [
     [ {n:"Bigger Bombs", d:"Larger blast area and popping power.", c:"$250"}, {n:"Heavy Bombs", d:"Smash 2 layers at once.", c:"$650"}, {n:"Really Big Bombs", d:"Greater damage, knocks Bloons back.", c:"$1,100"}, {n:"Bloon Impact", d:"Explosions stun Bloons, range increased.", c:"$2,800"}, {n:"Bloon Crush", d:"Massive damage, can stun MOAB-class.", c:"$55,000"} ],
     [ {n:"Faster Reload", d:"Reloads faster.", c:"$250"}, {n:"Missile Launcher", d:"Missiles fire faster, fly faster, more range.", c:"$400"}, {n:"MOAB Mauler", d:"Much more damage to MOAB-class.", c:"$1,000"}, {n:"MOAB Assassin", d:"Ability: missile does massive MOAB damage.", c:"$3,450"}, {n:"MOAB Eliminator", d:"Assassinate deals 6x damage, short cooldown.", c:"$26,000"} ],
     [ {n:"Extra Range", d:"Increases attack range.", c:"$200"}, {n:"Frag Bombs", d:"Sharp fragments pop more Bloons.", c:"$300"}, {n:"Cluster Bombs", d:"Throws secondary bombs every shot.", c:"$700"}, {n:"Recursive Cluster", d:"Every 2nd shot sends more cluster bombs.", c:"$2,500"}, {n:"Bomb Blitz", d:"Much more damage, auto-triggers Bomb Storm on life loss.", c:"$30,000"} ]
@@ -550,12 +550,12 @@ const towerUpgrades = {
     [ {n:"Eagle Eye", d:"Can see Camo Bloons.", c:"$150"}, {n:"Bullseye", d:"Chance to Crit, higher at range.", c:"$350"}, {n:"Deadeye", d:"Ability + long range rifle, pops Lead and Fortified.", c:"$3,000"}, {n:"Bounty Hunter", d:"Ability: marks Bloons for bonus damage/cash.", c:"$6,000"}, {n:"Golden Justice", d:"Longarm hits clean through an army of Bloons.", c:"$42,000"} ],
     [ {n:"Wanderer", d:"Attacks faster alone, less so near other Monkeys.", c:"$220"}, {n:"Nomad", d:"Faster with more Bloons in range; bonus on life loss.", c:"$280"}, {n:"Enforcer", d:"Shotgun knocks back close Bloons.", c:"$2,100"}, {n:"Avenger", d:"Shrapnel knocks back MOABs; life-loss mitigation.", c:"$9,500"}, {n:"The Desert Phantom", d:"Hits so hard it's like a mine blast.", c:"$31,000"} ]
   ]},
-  "Ice Monkey": { complete: true, paths: [
+  "Ice Monkey": { complete: true, paragon: {n:"Herald of Everfrost", d:"Combines the Ice Monkey's three tier 5 upgrades. Freezes and shreds huge groups of Bloons across the whole map."}, paths: [
     [ {n:"Permafrost", d:"Bloons move slowly even after thawing.", c:"$150"}, {n:"Cold Snap", d:"Can freeze and pop Lead and Camo Bloons.", c:"$350"}, {n:"Ice Shards", d:"Strips Camo/Regrow, shards fly out on pop.", c:"$1,500"}, {n:"Embrittlement", d:"Hits MOAB-class; brittles Bloons, strips Lead briefly.", c:"$2,300"}, {n:"Super Brittle", d:"Huge damage while frozen; shreds Ceramics.", c:"$28,000"} ],
     [ {n:"Larger Radius", d:"Bigger freeze area.", c:"$150"}, {n:"Snap Freeze", d:"Can re-freeze already-frozen Bloons.", c:"$250"}, {n:"Arctic Wind", d:"Cold aura slows nearby Bloons, freezes water.", c:"$1,200"}, {n:"Snowstorm", d:"Ability: freezes all regular Bloons, briefly freezes White/Zebra/Camo, slows MOAB-class.", c:"$3,600"}, {n:"Absolute Zero", d:"Stronger, longer freeze plus a big attack speed boost for all Ice Monkeys while active.", c:"$40,000"} ],
     [ {n:"Enhanced Freeze", d:"Attacks faster, freeze lasts longer.", c:"$150"}, {n:"Deep Freeze", d:"More pierce, freezes an extra layer, longer duration.", c:"$450"}, {n:"Cryo Cannon", d:"Rapid-fire ice bombs over longer range.", c:"$1,800"}, {n:"Icicle Impale", d:"Extra MOAB-class damage; icicles pop nearby Bloons.", c:"$3,300"}, {n:"Comet Impale", d:"Massive icicle spikes deal huge MOAB-class damage and freeze them.", c:"$50,000"} ]
   ]},
-  "Tack Shooter": { complete: true, paths: [
+  "Tack Shooter": { complete: true, paragon: {n:"Crucible of Steel and Flame", d:"Combines Inferno Ring, Super Maelstrom, and The Tack Zone. Second cheapest Paragon, powered mostly by its abilities."}, paths: [
     [ {n:"Faster Shooting", d:"Shoots faster.", c:"$95"}, {n:"Even Faster Shooting", d:"Shoots even faster.", c:"$150"}, {n:"Hot Shots", d:"Superheated tacks pop Lead Bloons, extra damage.", c:"$400"}, {n:"Ring of Fire", d:"Replaces tacks with a damaging ring of flame hitting many more Bloons.", c:"$2,700"}, {n:"Inferno Ring", d:"Deadly, wider ring of flame.", c:"$25,000"} ],
     [ {n:"Long Range Tacks", d:"Tacks fly further.", c:"$100"}, {n:"Super Range Tacks", d:"Even longer range, more Bloons hit.", c:"$200"}, {n:"Blade Shooter", d:"Ultra-sharp blades, can shatter frozen Bloons.", c:"$1,150"}, {n:"Blade Maelstrom", d:"Ability: storm of blades covers the area.", c:"$2,400"}, {n:"Super Maelstrom", d:"Stronger, longer-lasting blade storm.", c:"$26,000"} ],
     [ {n:"More Tacks", d:"10 tacks per volley instead of 8.", c:"$300"}, {n:"Even More Tacks", d:"12 tacks per volley.", c:"$450"}, {n:"Tack Sprayer", d:"16 tacks per volley.", c:"$1,000"}, {n:"The Tack Zone", d:"Incredibly fast firing rate.", c:"$8,000"}, {n:"MOAB Domination", d:"Overwhelming tack output that shreds nearly everything nearby.", c:"$52,000"} ]
@@ -565,17 +565,17 @@ const towerUpgrades = {
     [ {n:"Night Vision Goggles", d:"Detects Camo, extra damage to it.", c:"$300"}, {n:"Shrapnel Shot", d:"Hit Bloons spray a cone of shrapnel.", c:"$650"}, {n:"Bouncing Bullet", d:"Bullets bounce to 2 extra targets.", c:"$1,300"}, {n:"Supply Drop", d:"Ability: drops cash crate, buffs all Snipers.", c:"$4,000"}, {n:"Full Auto Rifle", d:"Fires very fast with huge popping power.", c:"$36,000"} ],
     [ {n:"Fast Firing", d:"Shoots faster.", c:"$200"}, {n:"Even Faster Firing", d:"Shoots even faster.", c:"$450"}, {n:"Semi-Automatic", d:"Attacks 3x as fast.", c:"$2,500"}, {n:"Fully Automatic Rifle", d:"Rapid popping power.", c:"$10,000"}, {n:"Elite Defender", d:"Extreme fire rate plus lives-lost speed burst.", c:"$50,000"} ]
   ]},
-  "Monkey Sub": { complete: true, paths: [
+  "Monkey Sub": { complete: true, paragon: {n:"Nautic Siege Core", d:"Combines Energizer, Pre-Emptive Strike, and Sub Commander. Supports the whole map while hitting hard on its own."}, paths: [
     [ {n:"Longer Range", d:"Longer range.", c:"$110"}, {n:"Advanced Intel", d:"Extends targeting radius to other towers' range.", c:"$450"}, {n:"Submerge and Support", d:"Submerges to permanently reveal Camo in range, no attack while submerged.", c:"$700"}, {n:"Bloontonium Reactor", d:"Submerged detection, pops Bloons, cuts nearby water Monkeys' cooldowns.", c:"$2,800"}, {n:"Energizer", d:"Massive pierce boost, cuts everyone's ability cooldowns, faster Hero XP.", c:"$45,000"} ],
     [ {n:"Barbed Darts", d:"Darts pop 3 extra Bloons; buffs other weapons' pierce.", c:"$300"}, {n:"Heat-tipped Darts", d:"Darts pop Frozen and Lead Bloons.", c:"$500"}, {n:"Ballistic Missile", d:"Seeking missile, extra MOAB and Ceramic damage.", c:"$1,700"}, {n:"First Strike Capability", d:"Ability: devastating missile at the biggest Bloon on screen.", c:"$5,500"}, {n:"Pre-Emptive Strike", d:"Auto-fires a powerful missile the moment a MOAB-class Bloon spawns.", c:"$48,000"} ],
     [ {n:"Twin Guns", d:"Second gun doubles attack speed.", c:"$150"}, {n:"Airburst Darts", d:"Darts split into 3 on impact.", c:"$1,150"}, {n:"Triple Guns", d:"Third gun for even faster firing.", c:"$1,500"}, {n:"Armor Piercing Darts", d:"More damage/popping power, bonus vs MOAB-class.", c:"$4,600"}, {n:"Sub Commander", d:"Doubles damage and adds pierce for itself and nearby Subs.", c:"$40,000"} ]
   ]},
-  "Monkey Buccaneer": { complete: true, paths: [
+  "Monkey Buccaneer": { complete: true, paragon: {n:"Navarch of the Seas", d:"Combines Carrier Flagship, Pirate Lord, and Trade Empire. Can hook down and one-shot BADs."}, paths: [
     [ {n:"Faster Shooting", d:"All cannons fire faster.", c:"$100"}, {n:"Double Shot", d:"Fires more shots per volley.", c:"$400"}, {n:"Destroyer", d:"5x attack speed, hits Frozen Bloons.", c:"$1,750"}, {n:"Aircraft Carrier", d:"Launches strafing fighter planes and MOAB missiles.", c:"$3,150"}, {n:"Carrier Flagship", d:"More damage, boosts speed of nearby water towers and Aces.", c:"$16,000"} ],
     [ {n:"Grape Shot", d:"5-shot grape spray added.", c:"$400"}, {n:"Hot Shot", d:"Burning grapeshot pops Lead, sets Bloons alight.", c:"$550"}, {n:"Monkey Pirates", d:"Cannons added, hook ability pulls down MOAB-class.", c:"$3,850"}, {n:"Pirate Lord", d:"Multiple hooks, extra cash from downed MOAB-class.", c:"$14,000"} ],
     [ {n:"Long Range", d:"Much longer range, faster/piercier shots.", c:"$300"}, {n:"Crow's Nest", d:"Can hit Camo Bloons.", c:"$450"}, {n:"Merchantman", d:"Generates cash each round automatically.", c:"$1,800"}, {n:"Favored Trades", d:"Faster attacks, big income, buffs nearby sell value.", c:"$4,500"}, {n:"Trade Empire", d:"Massive income, boosts other Merchantmen nearby.", c:"$55,000"} ]
   ]},
-  "Monkey Ace": { complete: true, paths: [
+  "Monkey Ace": { complete: true, paragon: {n:"Goliath Doomship", d:"Combines Sky Shredder, Tsar Bomba, and Flying Fortress. Most expensive Paragon, widely considered the strongest vs Boss Bloons."}, paths: [
     [ {n:"Rapid Fire", d:"Shoots faster.", c:"$300"}, {n:"Lots More Darts", d:"12 darts per volley.", c:"$500"}, {n:"Fighter Plane", d:"Flies fast, launches anti-MOAB missiles.", c:"$1,900"}, {n:"Operation: Dart Storm", d:"16 darts per volley, twice as fast.", c:"$8,500"}, {n:"Sky Shredder", d:"Overwhelming dart output.", c:"$28,000"} ],
     [ {n:"Exploding Pineapple", d:"Drops explosive pineapples on a delay.", c:"$500"}, {n:"Spy Plane", d:"Hits Camo Bloons, extra damage to them.", c:"$350"}, {n:"Bomber Ace", d:"Drops a line of bombs across the track.", c:"$2,100"}, {n:"Ground Zero", d:"Ability: huge bomb wipes most things on screen.", c:"$5,600"}, {n:"Tsar Bomba", d:"An enormous bomb.", c:"$60,000"} ],
     [ {n:"Sharper Darts", d:"Darts pop 8 Bloons each.", c:"$650"}, {n:"Centered Path", d:"New flight path for max map coverage.", c:"$300"}, {n:"Neva-Miss Targeting", d:"Darts auto-seek and pop Bloons.", c:"$2,200"}, {n:"Flying Fortress", d:"Rapid darts and bombs dominate most Bloon types.", c:"$28,500"} ]
@@ -585,7 +585,7 @@ const towerUpgrades = {
     [ {n:"Faster Reload", d:"Attacks faster.", c:"$300"}, {n:"Rapid Reload", d:"Attacks even faster.", c:"$450"}, {n:"Heavy Shells", d:"Extra damage vs Ceramic/Lead/Fortified/stunned; pops Black.", c:"$1,900"}, {n:"Artillery Battery", d:"Ability: rapid-fire wide-area attack, upgrades to 3 barrels.", c:"$6,000"}, {n:"Pop and Awe", d:"Permanent rapid fire, ability rains screen-wide explosions.", c:"$65,000"} ],
     [ {n:"Increased Accuracy", d:"More accurate shots.", c:"$150"}, {n:"Burny Stuff", d:"Hits set Bloons briefly ablaze.", c:"$500"}, {n:"Signal Flare", d:"Camo popped by flares loses camo permanently.", c:"$850"}, {n:"Shattering Shells", d:"Strips special properties off most Bloons; strong burn on MOAB-class.", c:"$3,500"}, {n:"Blooncineration", d:"Intense burn that melts through MOAB-class with ease.", c:"$32,000"} ]
   ]},
-  "Wizard Monkey": { complete: true, paths: [
+  "Wizard Monkey": { complete: true, paragon: {n:"Magus Perfectus", d:"Combines Archmage, Wizard Lord Phoenix, and Prince of Darkness. Mana-based, swaps between attack and drain modes."}, paths: [
     [ {n:"Guided Magic", d:"Bolts last longer and seek Bloons around cover.", c:"$250"}, {n:"Arcane Blast", d:"Bigger blasts pop 2 layers.", c:"$400"}, {n:"Arcane Mastery", d:"Faster, more damage, more popping power.", c:"$1,300"}, {n:"Arcane Spike", d:"Fast, high-damage magic vs most Bloon types.", c:"$4,700"}, {n:"Magus Perfectus", d:"Faster, hits MOAB-class hard.", c:"$52,500"} ],
     [ {n:"Intense Magic", d:"Faster, more piercing magic bolts.", c:"$450"}, {n:"Monkey Sense", d:"Slight range boost, detects Camo.", c:"$150"}, {n:"Necromancer", d:"Reanimates popped Bloons as servants.", c:"$1,800"}, {n:"Prince of Darkness", d:"Stronger, more numerous undead servants.", c:"$15,000"} ],
     [ {n:"Fireball", d:"Periodic explosive fireball spell.", c:"$300"}, {n:"Wall of Fire", d:"Roasts Bloons crossing a wall of fire.", c:"$450"}, {n:"Dragon's Breath", d:"Continuous flame attack, buffs Fireball/Wall of Fire.", c:"$1,100"}, {n:"Summon Phoenix", d:"Ability: powerful phoenix wreaks havoc for 20s.", c:"$3,600"}, {n:"Wizard Lord Phoenix", d:"Transforms into a devastating Lava Phoenix briefly.", c:"$47,500"} ]
@@ -595,7 +595,7 @@ const towerUpgrades = {
     [ {n:"Super Range", d:"More range.", c:"$3,000"}, {n:"Epic Range", d:"Even more range.", c:"$3,500"}, {n:"Robo Monkey", d:"Half Super Monkey, half killer robot.", c:"$20,000"}, {n:"Tech Terror", d:"Ability: near-total destruction in a blast radius.", c:"$40,000"}, {n:"The Anti-Bloon", d:"Automated eradication of most Bloons in range.", c:"$400,000"} ],
     [ {n:"Knockback", d:"Bloons get pushed back or slowed after each hit.", c:"$3,000"}, {n:"Enhanced Vision", d:"Slightly further range, sees and hits Camo.", c:"$3,000"}, {n:"Dark Knight", d:"Extra knockback/pierce, bonus MOAB damage, teleport ability.", c:"$20,000"}, {n:"Dark Champion", d:"Ruins nearly all Bloon types, map-wide teleport.", c:"$45,000"}, {n:"Legend of the Night", d:"The last resort when nothing else can hold the line.", c:"$400,000"} ]
   ]},
-  "Ninja Monkey": { complete: true, paths: [
+  "Ninja Monkey": { complete: true, paragon: {n:"Ascended Shadow", d:"Combines Grandmaster Ninja, Grand Saboteur, and Master Bomber. Grants global Camo detection to every tower — a Freeplay staple."}, paths: [
     [ {n:"Ninja Discipline", d:"Attacks faster.", c:"$100"}, {n:"Sharp Shurikens", d:"Shurikens pop 4 Bloons each.", c:"$250"}, {n:"Double Shot", d:"Throws 2 shurikens at once.", c:"$700"}, {n:"Grandmaster Ninja", d:"Throws 5 shurikens per shot, very fast.", c:"$8,000"}, {n:"Ascended Shadow", d:"The complete assassin package for any Bloon threat.", c:"$40,000"} ],
     [ {n:"Distraction", d:"Some Bloons get distracted and move backwards.", c:"$150"}, {n:"Counter-Espionage", d:"Attacks strip Camo from hit Bloons.", c:"$350"}, {n:"Shinobi Tactics", d:"Buffs attack speed/pierce for nearby Ninjas, stacks.", c:"$1,150"}, {n:"Bloon Sabotage", d:"Ability: all Bloons move at half speed for 15s.", c:"$2,300"}, {n:"Grand Saboteur", d:"Longer sabotage, new MOAB-class spawn weaker, buffs all Shinobi.", c:"$30,000"} ],
     [ {n:"Seeking Shuriken", d:"More range, shurikens auto-seek Bloons.", c:"$300"}, {n:"Caltrops", d:"Drops spiked caltrops on the track.", c:"$300"}, {n:"Flash Bomb", d:"Stunning bombs alternate with bonus stun damage.", c:"$900"}, {n:"Sticky Bomb", d:"Powerful timed charges thrown at MOAB-class.", c:"$4,000"}, {n:"Master Bomber", d:"A one-Monkey MOAB demolition machine.", c:"$40,000"} ]
@@ -610,7 +610,7 @@ const towerUpgrades = {
     [ {n:"Grow Blocker", d:"Prevents Regrow Bloons from working in radius.", c:"$300"}, {n:"Radar Scanner", d:"Grants Camo detection to towers in radius.", c:"$700"}, {n:"Monkey Intelligence Bureau", d:"Lets nearby towers pop every Bloon type.", c:"$3,000"}, {n:"Call to Arms", d:"Ability: +50% attack speed and pops for towers nearby.", c:"$5,000"}, {n:"Homeland Defense", d:"Doubles the Call to Arms buff.", c:"$40,000"} ],
     [ {n:"Monkey Business", d:"10% discount on towers/upgrades in radius.", c:"$400"}, {n:"Monkey Commerce", d:"Extra discount, stacks with other Villages.", c:"$1,600"}, {n:"Monkey Town", d:"Bonus cash per pop for towers in radius.", c:"$2,300"}, {n:"Monkeyopolis", d:"Sacrifices nearby Banana Farms for cash production.", c:"$5,000"}, {n:"Monkey City", d:"Bigger radius, cash generation, free Dart Monkey each round.", c:"$70,000"} ]
   ]},
-  "Spike Factory": { complete: true, paths: [
+  "Spike Factory": { complete: true, paragon: {n:"Mega Massive Munitions Factory", d:"Combines Super Mines, Carpet of Spikes, and Perma-Spike. Stockpiles giant mines and a permanent damaging carpet."}, paths: [
     [ {n:"Bigger Stacks", d:"Larger spike piles per drop.", c:"$300"}, {n:"White Hot Spikes", d:"Cuts through Lead and Frozen Bloons.", c:"$450"}, {n:"Spiked Balls", d:"Extra damage vs Ceramic/Fortified.", c:"$1,800"}, {n:"Spiked Mines", d:"Mines explode once spent.", c:"$3,000"}, {n:"Super Mines", d:"Giant mines that can wipe out almost anything.", c:"$50,000"} ],
     [ {n:"Faster Production", d:"Produces spikes faster.", c:"$200"}, {n:"Even Faster Production", d:"Even faster production.", c:"$350"}, {n:"MOAB Shredder", d:"Spikes shred MOAB-class Bloons.", c:"$1,900"}, {n:"Spike Storm", d:"Ability: thick spike layer over the whole track.", c:"$5,500"}, {n:"Carpet of Spikes", d:"Regularly re-spikes the whole track automatically.", c:"$60,000"} ],
     [ {n:"Long Reach", d:"Longer range, spikes last longer.", c:"$150"}, {n:"Smart Spikes", d:"Targeting priority, faster start-of-round production.", c:"$350"}, {n:"Long Life Spikes", d:"Spikes last much longer, can carry to next round.", c:"$900"}, {n:"Deadly Spikes", d:"Pop 2 layers each, last another round.", c:"$3,300"}, {n:"Perma-Spike", d:"High-damage spikes that are nearly permanent.", c:"$40,000"} ]
@@ -620,12 +620,12 @@ const towerUpgrades = {
     [ {n:"Bigger Jets", d:"Moves much faster.", c:"$300"}, {n:"IFR", d:"Detects and shoots Camo Bloons.", c:"$600"}, {n:"Downdraft", d:"Blows Bloons back toward the entrance.", c:"$3,500"}, {n:"Support Chinook", d:"Big knockback, drops crates, redeploys towers.", c:"$9,500"}, {n:"Special Poperations", d:"Deploys a Monkey Marine with a machine gun.", c:"$30,000"} ],
     [ {n:"Faster Darts", d:"Darts fly faster.", c:"$250"}, {n:"Faster Firing", d:"Faster attack speed overall.", c:"$350"}, {n:"MOAB Shove", d:"Collides with and shoves MOAB-class Bloons.", c:"$3,400"}, {n:"Comanche Defense", d:"Auto-calls mini Comanches when needed.", c:"$8,500"}, {n:"Comanche Commander", d:"Upgraded weapons, 3 more Comanches permanently.", c:"$35,000"} ]
   ]},
-  "Engineer Monkey": { complete: true, paths: [
+  "Engineer Monkey": { complete: true, paragon: {n:"Master Builder", d:"Combines Sentry Champion, Ultraboost, and XXXL Trap. Stuns almost anything, deploys Mega Sentries anywhere on the map."}, paths: [
     [ {n:"Sentry Gun", d:"Deploys temporary sentries near the track.", c:"$500"}, {n:"Faster Engineering", d:"Produces sentries/foam/traps more often.", c:"$400"}, {n:"Sprockets", d:"Increases sentry and Engineer attack speed.", c:"$575"}, {n:"Sentry Expert", d:"Sentries deploy with different damage types.", c:"$2,500"}, {n:"Sentry Champion", d:"Super-powerful, unstable sentries.", c:"$32,000"} ],
     [ {n:"Larger Service Area", d:"Shoots further, sentries in a larger area.", c:"$250"}, {n:"Deconstruction", d:"Extra damage to MOAB-class/Fortified.", c:"$350"}, {n:"Cleansing Foam", d:"Removes Camo/Regrow, pops Lead.", c:"$900"}, {n:"Overclock", d:"Ability: supercharge another tower's attack speed.", c:"$13,500"}, {n:"Ultraboost", d:"Permanent boost stacks with each overclock.", c:"$72,000"} ],
     [ {n:"Oversize Nails", d:"Pops 8 Bloons at once, including frozen.", c:"$450"}, {n:"Pin", d:"Pins Bloons in place briefly when struck.", c:"$220"}, {n:"Double Gun", d:"Two guns for twice the fun.", c:"$450"}, {n:"Bloon Trap", d:"Captures Bloons until full, collect for cash.", c:"$3,600"}, {n:"XXXL Trap", d:"Huge traps for some of the biggest Bloons.", c:"$45,000"} ]
   ]},
-  "Druid": { complete: true, paths: [
+  "Druid": { complete: true, paragon: {n:"Root of all Nature", d:"Combines Monarch of Storms, Spirit of the Forest, and Avatar of Wrath. The newest Paragon, added in version 54.0."}, paths: [
     [ {n:"Hard Thorns", d:"Pops 2 Bloons each, any Bloon type.", c:"$350"}, {n:"Heart of Thunder", d:"Lightning arcs from Bloon to Bloon.", c:"$850"}, {n:"Druid of the Storm", d:"Gusts blow Bloons back off the track.", c:"$1,700"}, {n:"Ball Lightning", d:"Camo detection, freezing lightning balls.", c:"$4,500"}, {n:"Monarch of Storms", d:"Massive superstorm barrage, blows Bloons back.", c:"$60,000"} ],
     [ {n:"Thorn Swarm", d:"8 thorns per shot instead of 5.", c:"$250"}, {n:"Heart of Oak", d:"Converts Regrow Bloons, gains pierce with lives.", c:"$350"}, {n:"Druid of the Jungle", d:"Vine entangles and crushes Bloons.", c:"$1,050"}, {n:"Jungle's Bounty", d:"Cash/lives per round, ability grabs Bloons.", c:"$4,900"}, {n:"Spirit of the Forest", d:"Thorned vines deal constant damage.", c:"$35,000"} ],
     [ {n:"Druidic Reach", d:"Large range increase.", c:"$100"}, {n:"Heart of Vengeance", d:"Attack speed scales with lives lost.", c:"$300"}, {n:"Druid of Wrath", d:"Gains attack speed while attacking.", c:"$600"}, {n:"Poplust", d:"Boosts nearby Druids, stacks up to 5x.", c:"$2,350"}, {n:"Avatar of Wrath", d:"More Bloons on screen, more damage.", c:"$45,000"} ]
@@ -690,6 +690,20 @@ function selectUpgradeTower(name) {
     });
     panel.appendChild(col);
   });
+  const wrap = document.getElementById('upgrade-panel').parentElement;
+  let paragonCard = document.getElementById('upgrade-paragon-card');
+  if (paragonCard) paragonCard.remove();
+  if (data.paragon) {
+    paragonCard = document.createElement('div');
+    paragonCard.id = 'upgrade-paragon-card';
+    paragonCard.className = 'card';
+    paragonCard.style.marginTop = '16px';
+    paragonCard.innerHTML = `
+      <p class="card-title">${data.paragon.n} <span class="tag tag-bad">Paragon</span></p>
+      <p>${data.paragon.d}</p>
+    `;
+    wrap.appendChild(paragonCard);
+  }
 }
 
 renderUpgradeTowerList();
