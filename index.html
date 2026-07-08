@@ -99,6 +99,16 @@
   .share-btn:hover { color: var(--green); border-color: var(--green); }
   .section-head { display: flex; align-items: center; margin-bottom: 1rem; }
   .section-head h2 { margin: 0; }
+  .collapse-toggle {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    border-radius: 6px; padding: 4px 8px; cursor: pointer; margin-left: 8px;
+    display: flex; align-items: center;
+  }
+  .collapse-toggle:hover { color: var(--green); border-color: var(--green); }
+  .collapse-toggle i { transition: transform 0.15s ease; }
+  section.collapsed .collapse-toggle i { transform: rotate(-90deg); }
+  section.collapsed .section-body { display: none; }
+  .expand-all-bar { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 1.5rem; }
   .signin-note { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
   .upgrade-tower-list { margin-bottom: 1.2rem; }
   .upgrade-tower-group { margin-bottom: 14px; }
@@ -149,11 +159,17 @@
     <div id="auth-area"></div>
   </header>
 
+  <div class="expand-all-bar">
+    <button class="auth-btn" id="expand-all-btn"><i class="ti ti-arrows-maximize"></i> Expand all</button>
+    <button class="auth-btn" id="collapse-all-btn"><i class="ti ti-arrows-minimize"></i> Collapse all</button>
+  </div>
+
   <section id="bloons">
     <div class="section-head">
       <h2><i class="ti ti-skull"></i> Bloon Intel</h2>
       <button class="share-btn" data-share="#bloons"><i class="ti ti-link"></i> Share</button>
-    </div>
+    <button class="collapse-toggle" data-target="bloons" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
+    <div class="section-body" id="bloons-body">
 
     <div class="card">
       <p class="card-title">Red <span class="tag tag-ddt">Basic</span></p>
@@ -286,16 +302,19 @@
       <p>First appears <b>round 21+</b>, weekend event only — not in CHIMPS, Deflation, or Sandbox.</p>
       <p>Takes only 1 damage per hit regardless of attack power, and evolves (gains new properties) each time it spawns. Releases nothing — no lives lost if it escapes.</p>
     </div>
+  </div>
   </section>
 
   <section id="upgrades">
     <div class="section-head">
       <h2><i class="ti ti-stairs-up"></i> Upgrade Paths</h2>
       <button class="share-btn" data-share="#upgrades"><i class="ti ti-link"></i> Share</button>
-    </div>
+    <button class="collapse-toggle" data-target="upgrades" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
+    <div class="section-body" id="upgrades-body">
     <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Click a tower to see its 3 paths, tier by tier. 13 towers also show their Paragon below.</p>
     <div class="upgrade-tower-list" id="upgrade-tower-list"></div>
     <div class="upgrade-panel" id="upgrade-panel"></div>
+  </div>
   </section>
 
 
@@ -303,7 +322,8 @@
     <div class="section-head">
       <h2><i class="ti ti-shield-star"></i> Towers</h2>
       <button class="share-btn" data-share="#towers"><i class="ti ti-link"></i> Share</button>
-    </div>
+    <button class="collapse-toggle" data-target="towers" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
+    <div class="section-body" id="towers-body">
 
     <h3 style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin:0 0 8px;">Primary</h3>
     <div class="card">
@@ -345,13 +365,15 @@
       <p><b>Engineer Monkey</b> — sentry gun + deployable traps.</p>
       <p><b>Beast Handler</b> — melee by default, upgrades add up to 2 of 3 beasts (land/water/air) to attack instead.</p>
     </div>
+  </div>
   </section>
 
   <section id="tips">
     <div class="section-head">
       <h2><i class="ti ti-bulb"></i> Tips &amp; Tricks</h2>
       <button class="share-btn" data-share="#tips"><i class="ti ti-link"></i> Share</button>
-    </div>
+    <button class="collapse-toggle" data-target="tips" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
+    <div class="section-body" id="tips-body">
     <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Shared with everyone who visits this page.</p>
     <p class="signin-note" id="tip-signin-note">Sign in to post a tip.</p>
     <div id="tip-form-area" style="display:none;">
@@ -366,13 +388,15 @@
       </div>
     </div>
     <div id="tip-list"></div>
+  </div>
   </section>
 
   <section id="lobbies">
     <div class="section-head">
       <h2><i class="ti ti-users"></i> Co-op Lobbies</h2>
       <button class="share-btn" data-share="#lobbies"><i class="ti ti-link"></i> Share</button>
-    </div>
+    <button class="collapse-toggle" data-target="lobbies" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
+    <div class="section-body" id="lobbies-body">
     <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Post your BTD6 co-op game code to find teammates. Only you can remove your own lobby.</p>
     <p class="signin-note" id="lobby-signin-note">Sign in to post a lobby.</p>
     <div id="lobby-form-area" style="display:none;">
@@ -388,13 +412,15 @@
       </div>
     </div>
     <div id="lobby-list"></div>
+  </div>
   </section>
 
   <section id="videos">
     <div class="section-head">
       <h2><i class="ti ti-brand-youtube" style="color: var(--red);"></i> Videos</h2>
       <button class="share-btn" data-share="#videos"><i class="ti ti-link"></i> Share</button>
-    </div>
+    <button class="collapse-toggle" data-target="videos" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
+    <div class="section-body" id="videos-body">
     <div class="video-row">
       <i class="ti ti-brand-youtube yt"></i>
       <a href="https://www.youtube.com/watch?v=w843bBeu2tM" target="_blank" rel="noopener">Three Mines 'Round [Hard Standard] Guide | No Monkey Knowledge (2025 Updated)</a>
@@ -403,6 +429,7 @@
       <i class="ti ti-brand-youtube yt"></i>
       <a href="https://www.youtube.com/watch?v=FNVymZcG9kQ" target="_blank" rel="noopener">BTD6 HARD STANDARD | NO MONKEY KNOWLEDGE | THREE MINES ROUND</a>
     </div>
+  </div>
   </section>
 
   <footer>Sourced from Blooncyclopedia (bloonswiki.com)</footer>
@@ -803,6 +830,21 @@ document.getElementById('lobby-add-btn').onclick = async () => {
     createdAt: serverTimestamp()
   });
   codeIn.value = ''; mapIn.value = ''; diffIn.value = ''; typeIn.value = ''; slotsIn.value = '';
+};
+// ---------- Collapsible sections ----------
+document.querySelectorAll('.collapse-toggle').forEach(btn => {
+  btn.onclick = () => {
+    const section = document.getElementById(btn.dataset.target);
+    section.classList.toggle('collapsed');
+  };
+});
+
+document.getElementById('expand-all-btn').onclick = () => {
+  document.querySelectorAll('section[id]').forEach(s => s.classList.remove('collapsed'));
+};
+
+document.getElementById('collapse-all-btn').onclick = () => {
+  document.querySelectorAll('section[id]').forEach(s => s.classList.add('collapsed'));
 };
 </script>
 </body>
