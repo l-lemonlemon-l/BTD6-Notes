@@ -82,6 +82,24 @@
     padding: 0 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center;
   }
   .add-form button:hover { opacity: 0.9; }
+  #auth-area { display: flex; align-items: center; gap: 8px; }
+  .auth-btn {
+    background: transparent; border: 1px solid var(--border-strong, var(--border)); color: var(--text);
+    border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .auth-btn:hover { background: var(--panel); }
+  .user-chip { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .user-chip img { width: 26px; height: 26px; border-radius: 50%; }
+  .share-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px; margin-left: auto;
+  }
+  .share-btn:hover { color: var(--green); border-color: var(--green); }
+  .section-head { display: flex; align-items: center; margin-bottom: 1rem; }
+  .section-head h2 { margin: 0; }
+  .signin-note { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 3rem; }
 </style>
 </head>
@@ -90,14 +108,18 @@
 
   <header>
     <i class="ti ti-target-arrow"></i>
-    <div>
+    <div style="flex:1;">
       <h1>Striker Jones — BTD6 Field Notes</h1>
       <p>Bloon intel, map notes, and video references</p>
     </div>
+    <div id="auth-area"></div>
   </header>
 
-  <section>
-    <h2><i class="ti ti-skull"></i> Bloon Intel</h2>
+  <section id="bloons">
+    <div class="section-head">
+      <h2><i class="ti ti-skull"></i> Bloon Intel</h2>
+      <button class="share-btn" data-share="#bloons"><i class="ti ti-link"></i> Share</button>
+    </div>
 
     <div class="card">
       <p class="card-title">Red <span class="tag tag-ddt">Basic</span></p>
@@ -232,8 +254,11 @@
     </div>
   </section>
 
-  <section>
-    <h2><i class="ti ti-shield-star"></i> Towers</h2>
+  <section id="towers">
+    <div class="section-head">
+      <h2><i class="ti ti-shield-star"></i> Towers</h2>
+      <button class="share-btn" data-share="#towers"><i class="ti ti-link"></i> Share</button>
+    </div>
 
     <h3 style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin:0 0 8px;">Primary</h3>
     <div class="card">
@@ -277,23 +302,54 @@
     </div>
   </section>
 
-  <section>
-    <h2><i class="ti ti-bulb"></i> Tips &amp; Tricks</h2>
-    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Shared with everyone who visits this page.</p>
-    <div class="add-form">
-      <input id="tip-map" type="text" placeholder="Map" />
-      <input id="tip-diff" type="text" placeholder="Difficulty" />
-      <input id="tip-type" type="text" placeholder="Mode" />
+  <section id="tips">
+    <div class="section-head">
+      <h2><i class="ti ti-bulb"></i> Tips &amp; Tricks</h2>
+      <button class="share-btn" data-share="#tips"><i class="ti ti-link"></i> Share</button>
     </div>
-    <div class="add-form">
-      <input id="tip-text" type="text" placeholder="Your tip..." style="flex:3;" />
-      <button id="tip-add-btn"><i class="ti ti-plus"></i></button>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Shared with everyone who visits this page.</p>
+    <p class="signin-note" id="tip-signin-note">Sign in to post a tip.</p>
+    <div id="tip-form-area" style="display:none;">
+      <div class="add-form">
+        <input id="tip-map" type="text" placeholder="Map" />
+        <input id="tip-diff" type="text" placeholder="Difficulty" />
+        <input id="tip-type" type="text" placeholder="Mode" />
+      </div>
+      <div class="add-form">
+        <input id="tip-text" type="text" placeholder="Your tip..." style="flex:3;" />
+        <button id="tip-add-btn"><i class="ti ti-plus"></i></button>
+      </div>
     </div>
     <div id="tip-list"></div>
   </section>
 
-  <section>
-    <h2><i class="ti ti-brand-youtube" style="color: var(--red);"></i> Videos</h2>
+  <section id="lobbies">
+    <div class="section-head">
+      <h2><i class="ti ti-users"></i> Co-op Lobbies</h2>
+      <button class="share-btn" data-share="#lobbies"><i class="ti ti-link"></i> Share</button>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Post your BTD6 co-op game code to find teammates. Only you can remove your own lobby.</p>
+    <p class="signin-note" id="lobby-signin-note">Sign in to post a lobby.</p>
+    <div id="lobby-form-area" style="display:none;">
+      <div class="add-form">
+        <input id="lobby-code" type="text" placeholder="Game code" />
+        <input id="lobby-map" type="text" placeholder="Map" />
+        <input id="lobby-diff" type="text" placeholder="Difficulty" />
+      </div>
+      <div class="add-form">
+        <input id="lobby-type" type="text" placeholder="Mode (CHIMPS, Standard...)" />
+        <input id="lobby-slots" type="text" placeholder="Slots wanted" style="max-width:120px;" />
+        <button id="lobby-add-btn"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>
+    <div id="lobby-list"></div>
+  </section>
+
+  <section id="videos">
+    <div class="section-head">
+      <h2><i class="ti ti-brand-youtube" style="color: var(--red);"></i> Videos</h2>
+      <button class="share-btn" data-share="#videos"><i class="ti ti-link"></i> Share</button>
+    </div>
     <div class="video-row">
       <i class="ti ti-brand-youtube yt"></i>
       <a href="https://www.youtube.com/watch?v=w843bBeu2tM" target="_blank" rel="noopener">Three Mines 'Round [Hard Standard] Guide | No Monkey Knowledge (2025 Updated)</a>
@@ -313,6 +369,9 @@ import {
   getFirestore, collection, addDoc, deleteDoc, doc,
   onSnapshot, orderBy, query, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAwmtpeT3I0kWlxkzV_IqkWi59Wg1yFWrA",
@@ -326,6 +385,61 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+let currentUser = null;
+
+// ---------- Auth ----------
+function renderAuthArea() {
+  const area = document.getElementById('auth-area');
+  if (currentUser) {
+    area.innerHTML = `
+      <div class="user-chip">
+        <img src="${currentUser.photoURL || ''}" alt="" onerror="this.style.display='none'" />
+        <span>${currentUser.displayName || currentUser.email}</span>
+      </div>
+      <button class="auth-btn" id="signout-btn"><i class="ti ti-logout"></i> Sign out</button>
+    `;
+    document.getElementById('signout-btn').onclick = () => signOut(auth);
+  } else {
+    area.innerHTML = `<button class="auth-btn" id="signin-btn"><i class="ti ti-brand-google"></i> Sign in</button>`;
+    document.getElementById('signin-btn').onclick = () => signInWithPopup(auth, provider).catch(console.error);
+  }
+  const tipNote = document.getElementById('tip-signin-note');
+  const tipForm = document.getElementById('tip-form-area');
+  const lobbyNote = document.getElementById('lobby-signin-note');
+  const lobbyForm = document.getElementById('lobby-form-area');
+  if (currentUser) {
+    tipNote.style.display = 'none'; tipForm.style.display = 'block';
+    lobbyNote.style.display = 'none'; lobbyForm.style.display = 'block';
+  } else {
+    tipNote.style.display = 'block'; tipForm.style.display = 'none';
+    lobbyNote.style.display = 'block'; lobbyForm.style.display = 'none';
+  }
+}
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  renderAuthArea();
+});
+
+// ---------- Share buttons ----------
+document.querySelectorAll('.share-btn').forEach(btn => {
+  btn.onclick = async () => {
+    const url = window.location.origin + window.location.pathname + btn.dataset.share;
+    try {
+      await navigator.clipboard.writeText(url);
+      const original = btn.innerHTML;
+      btn.innerHTML = '<i class="ti ti-check"></i> Copied';
+      setTimeout(() => { btn.innerHTML = original; }, 1500);
+    } catch {
+      prompt('Copy this link:', url);
+    }
+  };
+});
+
+// ---------- Tips ----------
 const tipsRef = collection(db, "tips");
 const tipsQuery = query(tipsRef, orderBy("createdAt", "desc"));
 
@@ -336,11 +450,10 @@ function tipRow(tip) {
   div.innerHTML = `
     <p class="card-title">
       ${tip.map || 'Any map'} <span class="tag tag-ddt">${tip.diff || 'Any difficulty'}</span> <span class="tag tag-bad">${tip.type || 'Any mode'}</span>
-      <button aria-label="Remove" style="margin-left:auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 3px 7px; cursor: pointer;"><i class="ti ti-trash"></i></button>
     </p>
     <p>${tip.text}</p>
+    <p style="font-size:12px; color:var(--muted); margin-top:8px;">— ${tip.authorName || 'Anonymous'}</p>
   `;
-  div.querySelector('button').onclick = () => deleteDoc(doc(db, "tips", tip.id));
   return div;
 }
 
@@ -356,11 +469,12 @@ onSnapshot(tipsQuery, (snapshot) => {
   });
 }, (err) => {
   document.getElementById('tip-list').innerHTML =
-    '<p style="color:var(--red); font-size:14px;">Could not connect to shared tips. Check Firestore setup.</p>';
+    '<p style="color:var(--red); font-size:14px;">Could not connect to shared tips.</p>';
   console.error(err);
 });
 
 document.getElementById('tip-add-btn').onclick = async () => {
+  if (!currentUser) return;
   const mapIn = document.getElementById('tip-map');
   const diffIn = document.getElementById('tip-diff');
   const typeIn = document.getElementById('tip-type');
@@ -371,12 +485,71 @@ document.getElementById('tip-add-btn').onclick = async () => {
     diff: diffIn.value.trim(),
     type: typeIn.value.trim(),
     text: textIn.value.trim(),
+    authorName: currentUser.displayName || currentUser.email,
+    uid: currentUser.uid,
     createdAt: serverTimestamp()
   });
-  mapIn.value = '';
-  diffIn.value = '';
-  typeIn.value = '';
-  textIn.value = '';
+  mapIn.value = ''; diffIn.value = ''; typeIn.value = ''; textIn.value = '';
+};
+
+// ---------- Lobbies ----------
+const lobbiesRef = collection(db, "lobbies");
+const lobbiesQuery = query(lobbiesRef, orderBy("createdAt", "desc"));
+
+function lobbyRow(lobby) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.style.marginBottom = '8px';
+  const canDelete = currentUser && currentUser.uid === lobby.uid;
+  div.innerHTML = `
+    <p class="card-title">
+      ${lobby.map || 'Any map'} <span class="tag tag-ddt">${lobby.diff || 'Any difficulty'}</span> <span class="tag tag-bad">${lobby.type || 'Any mode'}</span>
+      ${canDelete ? `<button aria-label="Remove" style="margin-left:auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 3px 7px; cursor: pointer;"><i class="ti ti-trash"></i></button>` : ''}
+    </p>
+    <p><b style="color:var(--text);">Code:</b> ${lobby.code || '—'} &nbsp;·&nbsp; <b style="color:var(--text);">Slots wanted:</b> ${lobby.slots || '—'}</p>
+    <p style="font-size:12px; color:var(--muted); margin-top:8px;">— ${lobby.hostName || 'Anonymous'}</p>
+  `;
+  if (canDelete) {
+    div.querySelector('button').onclick = () => deleteDoc(doc(db, "lobbies", lobby.id));
+  }
+  return div;
+}
+
+onSnapshot(lobbiesQuery, (snapshot) => {
+  const list = document.getElementById('lobby-list');
+  list.innerHTML = '';
+  if (snapshot.empty) {
+    list.innerHTML = '<p style="color:var(--muted); font-size:14px;">No lobbies posted yet.</p>';
+    return;
+  }
+  snapshot.forEach((docSnap) => {
+    list.appendChild(lobbyRow({ id: docSnap.id, ...docSnap.data() }));
+  });
+}, (err) => {
+  document.getElementById('lobby-list').innerHTML =
+    '<p style="color:var(--red); font-size:14px;">Could not connect to lobbies.</p>';
+  console.error(err);
+});
+
+document.getElementById('lobby-add-btn').onclick = async () => {
+  if (!currentUser) return;
+  const codeIn = document.getElementById('lobby-code');
+  const mapIn = document.getElementById('lobby-map');
+  const diffIn = document.getElementById('lobby-diff');
+  const typeIn = document.getElementById('lobby-type');
+  const slotsIn = document.getElementById('lobby-slots');
+  if (!codeIn.value.trim()) return;
+  await addDoc(lobbiesRef, {
+    code: codeIn.value.trim(),
+    map: mapIn.value.trim(),
+    diff: diffIn.value.trim(),
+    type: typeIn.value.trim(),
+    slots: slotsIn.value.trim(),
+    hostName: currentUser.displayName || currentUser.email,
+    uid: currentUser.uid,
+    createdAt: serverTimestamp()
+  });
+  codeIn.value = ''; mapIn.value = ''; diffIn.value = ''; typeIn.value = ''; slotsIn.value = '';
 };
 </script>
 </body>
