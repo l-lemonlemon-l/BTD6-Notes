@@ -82,6 +82,17 @@
     padding: 0 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center;
   }
   .add-form button:hover { opacity: 0.9; }
+  .add-form select {
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 9px 12px; border-radius: 8px; font-size: 14px;
+  }
+  .chat-feed { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
+  .chat-msg { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+  .chat-msg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .chat-msg-name { font-weight: 600; font-size: 13px; }
+  .chat-msg-time { font-size: 11px; color: var(--muted); }
+  .chat-msg-text { font-size: 14px; color: var(--text); }
+  .chat-msg-code { font-size: 12px; color: var(--amber); margin-top: 4px; }
   #auth-area { display: flex; align-items: center; gap: 8px; }
   .auth-btn {
     background: transparent; border: 1px solid var(--border-strong, var(--border)); color: var(--text);
@@ -393,25 +404,43 @@
 
   <section id="lobbies">
     <div class="section-head">
-      <h2><i class="ti ti-users"></i> Co-op Lobbies</h2>
+      <h2><i class="ti ti-users"></i> Co-op Chat</h2>
       <button class="share-btn" data-share="lobbies"><i class="ti ti-link"></i> Share</button>
     <button class="collapse-toggle" data-target="lobbies" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
     <div class="section-body" id="lobbies-body">
-    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Post your BTD6 co-op game code to find teammates. Only you can remove your own lobby.</p>
-    <p class="signin-note" id="lobby-signin-note">Sign in to post a lobby.</p>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Live chat to find co-op teammates. Messages appear for everyone in real time.</p>
+    <p class="signin-note" id="lobby-signin-note">Sign in to chat.</p>
     <div id="lobby-form-area" style="display:none;">
       <div class="add-form">
-        <input id="lobby-code" type="text" placeholder="Game code" />
-        <input id="lobby-map" type="text" placeholder="Map" />
-        <input id="lobby-diff" type="text" placeholder="Difficulty" />
+        <select id="lobby-diff">
+          <option value="">Difficulty</option>
+          <option>Easy</option>
+          <option>Medium</option>
+          <option>Hard</option>
+          <option>Impoppable</option>
+        </select>
+        <select id="lobby-type">
+          <option value="">Mode</option>
+          <option>Standard</option>
+          <option>Primary Only</option>
+          <option>Military Only</option>
+          <option>Magic Monkeys Only</option>
+          <option>Apopalypse</option>
+          <option>Reverse</option>
+          <option>Half Cash</option>
+          <option>Double Cash</option>
+          <option>Alternate Bloons Rounds</option>
+          <option>CHIMPS</option>
+          <option>Deflation</option>
+        </select>
+        <input id="lobby-code" type="text" placeholder="Game code (optional)" />
       </div>
       <div class="add-form">
-        <input id="lobby-type" type="text" placeholder="Mode (CHIMPS, Standard...)" />
-        <input id="lobby-slots" type="text" placeholder="Slots wanted" style="max-width:120px;" />
-        <button id="lobby-add-btn"><i class="ti ti-plus"></i></button>
+        <input id="lobby-text" type="text" placeholder="Message..." style="flex:3;" />
+        <button id="lobby-add-btn"><i class="ti ti-send-2"></i></button>
       </div>
     </div>
-    <div id="lobby-list"></div>
+    <div id="lobby-chat" class="chat-feed"></div>
   </div>
   </section>
 
@@ -808,65 +837,75 @@ document.getElementById('tip-add-btn').onclick = async () => {
   mapIn.value = ''; diffIn.value = ''; typeIn.value = ''; textIn.value = '';
 };
 
-// ---------- Lobbies ----------
+// ---------- Co-op Chat ----------
 const lobbiesRef = collection(db, "lobbies");
-const lobbiesQuery = query(lobbiesRef, orderBy("createdAt", "desc"));
+const lobbiesQuery = query(lobbiesRef, orderBy("createdAt", "asc"));
 
-function lobbyRow(lobby) {
+function formatTime(ts) {
+  if (!ts || !ts.toDate) return '';
+  const d = ts.toDate();
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function chatMsg(msg) {
   const div = document.createElement('div');
-  div.className = 'card';
-  div.style.marginBottom = '8px';
-  const canDelete = currentUser && currentUser.uid === lobby.uid;
+  div.className = 'chat-msg';
+  const tags = [msg.diff, msg.type].filter(Boolean)
+    .map(t => `<span class="tag tag-ddt">${t}</span>`).join(' ');
   div.innerHTML = `
-    <p class="card-title">
-      ${lobby.map || 'Any map'} <span class="tag tag-ddt">${lobby.diff || 'Any difficulty'}</span> <span class="tag tag-bad">${lobby.type || 'Any mode'}</span>
-      ${canDelete ? `<button aria-label="Remove" style="margin-left:auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 3px 7px; cursor: pointer;"><i class="ti ti-trash"></i></button>` : ''}
-    </p>
-    <p><b style="color:var(--text);">Code:</b> ${lobby.code || '—'} &nbsp;·&nbsp; <b style="color:var(--text);">Slots wanted:</b> ${lobby.slots || '—'}</p>
-    <p style="font-size:12px; color:var(--muted); margin-top:8px;">— ${lobby.hostName || 'Anonymous'}</p>
+    <div class="chat-msg-head">
+      <span class="chat-msg-name">${msg.hostName || 'Anonymous'}</span>
+      <span class="chat-msg-time">${formatTime(msg.createdAt)}</span>
+      ${tags}
+    </div>
+    <div class="chat-msg-text">${msg.text || ''}</div>
+    ${msg.code ? `<div class="chat-msg-code">Code: ${msg.code}</div>` : ''}
   `;
-  if (canDelete) {
-    div.querySelector('button').onclick = () => deleteDoc(doc(db, "lobbies", lobby.id));
-  }
   return div;
 }
 
 onSnapshot(lobbiesQuery, (snapshot) => {
-  const list = document.getElementById('lobby-list');
-  list.innerHTML = '';
+  const feed = document.getElementById('lobby-chat');
+  feed.innerHTML = '';
   if (snapshot.empty) {
-    list.innerHTML = '<p style="color:var(--muted); font-size:14px;">No lobbies posted yet.</p>';
+    feed.innerHTML = '<p style="color:var(--muted); font-size:14px;">No messages yet — say hi.</p>';
     return;
   }
   snapshot.forEach((docSnap) => {
-    list.appendChild(lobbyRow({ id: docSnap.id, ...docSnap.data() }));
+    feed.appendChild(chatMsg({ id: docSnap.id, ...docSnap.data() }));
   });
+  feed.scrollTop = feed.scrollHeight;
 }, (err) => {
-  document.getElementById('lobby-list').innerHTML =
-    '<p style="color:var(--red); font-size:14px;">Could not connect to lobbies.</p>';
+  document.getElementById('lobby-chat').innerHTML =
+    '<p style="color:var(--red); font-size:14px;">Could not connect to chat.</p>';
   console.error(err);
 });
 
-document.getElementById('lobby-add-btn').onclick = async () => {
+async function sendLobbyMessage() {
   if (!currentUser) return;
-  const codeIn = document.getElementById('lobby-code');
-  const mapIn = document.getElementById('lobby-map');
   const diffIn = document.getElementById('lobby-diff');
   const typeIn = document.getElementById('lobby-type');
-  const slotsIn = document.getElementById('lobby-slots');
-  if (!codeIn.value.trim()) return;
+  const codeIn = document.getElementById('lobby-code');
+  const textIn = document.getElementById('lobby-text');
+  if (!textIn.value.trim()) return;
   await addDoc(lobbiesRef, {
+    text: textIn.value.trim(),
+    diff: diffIn.value,
+    type: typeIn.value,
     code: codeIn.value.trim(),
-    map: mapIn.value.trim(),
-    diff: diffIn.value.trim(),
-    type: typeIn.value.trim(),
-    slots: slotsIn.value.trim(),
     hostName: currentUser.displayName || currentUser.email,
     uid: currentUser.uid,
     createdAt: serverTimestamp()
   });
-  codeIn.value = ''; mapIn.value = ''; diffIn.value = ''; typeIn.value = ''; slotsIn.value = '';
-};
+  textIn.value = '';
+  codeIn.value = '';
+}
+
+document.getElementById('lobby-add-btn').onclick = sendLobbyMessage;
+document.getElementById('lobby-text').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendLobbyMessage();
+});
+
 // ---------- Collapsible sections ----------
 document.querySelectorAll('.collapse-toggle').forEach(btn => {
   btn.onclick = () => {
