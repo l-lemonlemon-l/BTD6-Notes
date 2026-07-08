@@ -476,7 +476,10 @@ function renderAuthArea() {
     document.getElementById('signout-btn').onclick = () => signOut(auth);
   } else {
     area.innerHTML = `<button class="auth-btn" id="signin-btn"><i class="ti ti-brand-google"></i> Sign in</button>`;
-    document.getElementById('signin-btn').onclick = () => signInWithPopup(auth, provider).catch(console.error);
+    document.getElementById('signin-btn').onclick = () => signInWithPopup(auth, provider).catch((err) => {
+      console.error(err);
+      alert('Sign-in failed: ' + err.code + '\n' + err.message);
+    });
   }
   const tipNote = document.getElementById('tip-signin-note');
   const tipForm = document.getElementById('tip-form-area');
