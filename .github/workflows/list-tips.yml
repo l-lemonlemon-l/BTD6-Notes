@@ -6,7 +6,12 @@ on:
 jobs:
   list-tips:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -20,17 +25,28 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           node -e "
+          const fs = require('fs');
           const { initializeApp, cert } = require('firebase-admin/app');
           const { getFirestore } = require('firebase-admin/firestore');
           const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
           initializeApp({ credential: cert(serviceAccount) });
           const db = getFirestore();
           db.collection('tips').orderBy('createdAt', 'desc').get().then(snap => {
-            if (snap.empty) { console.log('No tips found.'); process.exit(0); }
+            const out = [];
             snap.forEach(doc => {
               const d = doc.data();
-              console.log('[' + doc.id + '] ' + (d.map || 'Any map') + ' / ' + (d.diff || 'Any difficulty') + ' / ' + (d.type || 'Any mode') + ': ' + d.text);
+              out.push({ id: doc.id, map: d.map || null, diff: d.diff || null, type: d.type || null, text: d.text || '' });
             });
+            fs.writeFileSync('.github/tips-snapshot.json', JSON.stringify(out, null, 2));
+            console.log('Wrote', out.length, 'tips to snapshot');
             process.exit(0);
           }).catch(err => { console.error(err); process.exit(1); });
           "
+
+      - name: Commit snapshot
+        run: |
+          git config user.email "[email protected]"
+          git config user.name "tips-bot"
+          git add .github/tips-snapshot.json
+          git diff --staged --quiet || git commit -m "Update tips snapshot"
+          git push
