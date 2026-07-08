@@ -100,7 +100,13 @@
   .section-head { display: flex; align-items: center; margin-bottom: 1rem; }
   .section-head h2 { margin: 0; }
   .signin-note { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
-  .upgrade-tower-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.2rem; }
+  .upgrade-tower-list { margin-bottom: 1.2rem; }
+  .upgrade-tower-group { margin-bottom: 14px; }
+  .upgrade-tower-group-heading {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+    margin: 0 0 6px; font-weight: 600;
+  }
+  .upgrade-tower-group-row { display: flex; flex-wrap: wrap; gap: 8px; }
   .upgrade-tower-btn {
     background: var(--panel); border: 1px solid var(--border); color: var(--text);
     padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer;
@@ -592,16 +598,38 @@ const towerUpgrades = {
   ]}
 };
 
+const towerCategories = {
+  "Primary": ["Dart Monkey", "Boomerang Monkey", "Bomb Shooter", "Tack Shooter", "Ice Monkey", "Glue Gunner", "Desperado"],
+  "Military": ["Sniper Monkey", "Monkey Sub", "Monkey Buccaneer", "Monkey Ace", "Heli Pilot", "Mortar Monkey", "Dartling Gunner"],
+  "Magic": ["Wizard Monkey", "Super Monkey", "Ninja Monkey", "Alchemist", "Druid", "Mermonkey"],
+  "Support": ["Banana Farm", "Beast Handler", "Engineer Monkey", "Monkey Village", "Spike Factory"]
+};
+
 function renderUpgradeTowerList() {
   const list = document.getElementById('upgrade-tower-list');
   list.innerHTML = '';
-  Object.keys(towerUpgrades).forEach((name, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'upgrade-tower-btn' + (idx === 0 ? ' active' : '');
-    btn.textContent = name;
-    btn.dataset.tower = name;
-    btn.onclick = () => selectUpgradeTower(name);
-    list.appendChild(btn);
+  let first = true;
+  Object.entries(towerCategories).forEach(([category, names]) => {
+    const group = document.createElement('div');
+    group.className = 'upgrade-tower-group';
+    const heading = document.createElement('h3');
+    heading.className = 'upgrade-tower-group-heading';
+    heading.textContent = category;
+    group.appendChild(heading);
+    const row = document.createElement('div');
+    row.className = 'upgrade-tower-group-row';
+    names.forEach(name => {
+      if (!towerUpgrades[name]) return;
+      const btn = document.createElement('button');
+      btn.className = 'upgrade-tower-btn' + (first ? ' active' : '');
+      first = false;
+      btn.textContent = name;
+      btn.dataset.tower = name;
+      btn.onclick = () => selectUpgradeTower(name);
+      row.appendChild(btn);
+    });
+    group.appendChild(row);
+    list.appendChild(group);
   });
 }
 
@@ -779,4 +807,3 @@ document.getElementById('lobby-add-btn').onclick = async () => {
 </script>
 </body>
 </html>
-<!-- rebuild -->
