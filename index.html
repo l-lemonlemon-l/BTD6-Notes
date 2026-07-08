@@ -171,8 +171,7 @@
   </header>
 
   <div class="expand-all-bar">
-    <button class="auth-btn" id="expand-all-btn"><i class="ti ti-arrows-maximize"></i> Expand all</button>
-    <button class="auth-btn" id="collapse-all-btn"><i class="ti ti-arrows-minimize"></i> Collapse all</button>
+    <button class="auth-btn" id="toggle-all-btn"><i class="ti ti-arrows-minimize"></i> Collapse all</button>
   </div>
 
   <section id="bloons">
@@ -914,14 +913,16 @@ document.querySelectorAll('.collapse-toggle').forEach(btn => {
   };
 });
 
-document.getElementById('expand-all-btn').onclick = () => {
-  document.querySelectorAll('section[id]').forEach(s => s.classList.remove('collapsed'));
-};
+const toggleAllBtn = document.getElementById('toggle-all-btn');
+let allCollapsed = false;
 
-document.getElementById('collapse-all-btn').onclick = () => {
-  document.querySelectorAll('section[id]').forEach(s => s.classList.add('collapsed'));
+toggleAllBtn.onclick = () => {
+  allCollapsed = !allCollapsed;
+  document.querySelectorAll('section[id]').forEach(s => s.classList.toggle('collapsed', allCollapsed));
+  toggleAllBtn.innerHTML = allCollapsed
+    ? '<i class="ti ti-arrows-maximize"></i> Expand all'
+    : '<i class="ti ti-arrows-minimize"></i> Collapse all';
 };
 </script>
 </body>
 </html>
-<!-- rebuild -->
