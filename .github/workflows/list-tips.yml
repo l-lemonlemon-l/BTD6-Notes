@@ -1,0 +1,36 @@
+name: List Tips
+
+on:
+  workflow_dispatch:
+
+jobs:
+  list-tips:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install firebase-admin
+        run: npm install firebase-admin
+
+      - name: List tips
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          node -e "
+          const { initializeApp, cert } = require('firebase-admin/app');
+          const { getFirestore } = require('firebase-admin/firestore');
+          const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+          initializeApp({ credential: cert(serviceAccount) });
+          const db = getFirestore();
+          db.collection('tips').orderBy('createdAt', 'desc').get().then(snap => {
+            if (snap.empty) { console.log('No tips found.'); process.exit(0); }
+            snap.forEach(doc => {
+              const d = doc.data();
+              console.log('[' + doc.id + '] ' + (d.map || 'Any map') + ' / ' + (d.diff || 'Any difficulty') + ' / ' + (d.type || 'Any mode') + ': ' + d.text);
+            });
+            process.exit(0);
+          }).catch(err => { console.error(err); process.exit(1); });
+          "

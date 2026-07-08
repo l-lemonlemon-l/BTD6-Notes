@@ -1,0 +1,37 @@
+name: Delete Tip
+
+on:
+  workflow_dispatch:
+    inputs:
+      tip_id:
+        description: 'Firestore document ID of the tip to delete'
+        required: true
+        type: string
+
+jobs:
+  delete-tip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install firebase-admin
+        run: npm install firebase-admin
+
+      - name: Delete tip
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          TIP_ID: ${{ inputs.tip_id }}
+        run: |
+          node -e "
+          const { initializeApp, cert } = require('firebase-admin/app');
+          const { getFirestore } = require('firebase-admin/firestore');
+          const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+          initializeApp({ credential: cert(serviceAccount) });
+          const db = getFirestore();
+          db.collection('tips').doc(process.env.TIP_ID).delete()
+            .then(() => { console.log('Deleted tip', process.env.TIP_ID); process.exit(0); })
+            .catch((err) => { console.error(err); process.exit(1); });
+          "
