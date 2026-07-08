@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+  // Redirect /BTD6-Notes/<path> to /BTD6-Notes/?p=/<path> so index.html can restore it.
+  var segmentsToKeep = 1;
+  var l = window.location;
+  var parts = l.pathname.split('/').slice(1);
+  var base = parts.slice(0, segmentsToKeep).join('/');
+  var rest = parts.slice(segmentsToKeep).join('/');
+  l.replace(
+    l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+    '/' + base + '/?p=/' + rest.replace(/&/g, '~and~') +
+    (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+    l.hash
+  );
+</script>
+</head>
+<body></body>
+</html>

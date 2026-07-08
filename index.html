@@ -167,7 +167,7 @@
   <section id="bloons">
     <div class="section-head">
       <h2><i class="ti ti-skull"></i> Bloon Intel</h2>
-      <button class="share-btn" data-share="#bloons"><i class="ti ti-link"></i> Share</button>
+      <button class="share-btn" data-share="bloons"><i class="ti ti-link"></i> Share</button>
     <button class="collapse-toggle" data-target="bloons" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
     <div class="section-body" id="bloons-body">
 
@@ -308,7 +308,7 @@
   <section id="upgrades">
     <div class="section-head">
       <h2><i class="ti ti-stairs-up"></i> Upgrade Paths</h2>
-      <button class="share-btn" data-share="#upgrades"><i class="ti ti-link"></i> Share</button>
+      <button class="share-btn" data-share="upgrades"><i class="ti ti-link"></i> Share</button>
     <button class="collapse-toggle" data-target="upgrades" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
     <div class="section-body" id="upgrades-body">
     <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Click a tower to see its 3 paths, tier by tier. 13 towers also show their Paragon below.</p>
@@ -321,7 +321,7 @@
   <section id="towers">
     <div class="section-head">
       <h2><i class="ti ti-shield-star"></i> Towers</h2>
-      <button class="share-btn" data-share="#towers"><i class="ti ti-link"></i> Share</button>
+      <button class="share-btn" data-share="towers"><i class="ti ti-link"></i> Share</button>
     <button class="collapse-toggle" data-target="towers" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
     <div class="section-body" id="towers-body">
 
@@ -371,7 +371,7 @@
   <section id="tips">
     <div class="section-head">
       <h2><i class="ti ti-bulb"></i> Tips &amp; Tricks</h2>
-      <button class="share-btn" data-share="#tips"><i class="ti ti-link"></i> Share</button>
+      <button class="share-btn" data-share="tips"><i class="ti ti-link"></i> Share</button>
     <button class="collapse-toggle" data-target="tips" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
     <div class="section-body" id="tips-body">
     <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Shared with everyone who visits this page.</p>
@@ -394,7 +394,7 @@
   <section id="lobbies">
     <div class="section-head">
       <h2><i class="ti ti-users"></i> Co-op Lobbies</h2>
-      <button class="share-btn" data-share="#lobbies"><i class="ti ti-link"></i> Share</button>
+      <button class="share-btn" data-share="lobbies"><i class="ti ti-link"></i> Share</button>
     <button class="collapse-toggle" data-target="lobbies" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
     <div class="section-body" id="lobbies-body">
     <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">Post your BTD6 co-op game code to find teammates. Only you can remove your own lobby.</p>
@@ -418,7 +418,7 @@
   <section id="videos">
     <div class="section-head">
       <h2><i class="ti ti-brand-youtube" style="color: var(--red);"></i> Videos</h2>
-      <button class="share-btn" data-share="#videos"><i class="ti ti-link"></i> Share</button>
+      <button class="share-btn" data-share="videos"><i class="ti ti-link"></i> Share</button>
     <button class="collapse-toggle" data-target="videos" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
     <div class="section-body" id="videos-body">
     <div class="video-row">
@@ -704,10 +704,42 @@ function selectUpgradeTower(name) {
 renderUpgradeTowerList();
 selectUpgradeTower(Object.keys(towerUpgrades)[0]);
 
+// ---------- Routing (sub-URLs) ----------
+const repoBase = window.location.pathname.split('/').slice(0, 2).join('/'); // e.g. /BTD6-Notes
+
+function goToSection(id, push) {
+  const section = document.getElementById(id);
+  if (!section) return;
+  section.classList.remove('collapsed');
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (push) {
+    history.pushState(null, '', repoBase + '/' + id + '/');
+  }
+}
+
+(function restoreRouteFromRedirect() {
+  const params = new URLSearchParams(window.location.search);
+  const p = params.get('p');
+  if (p) {
+    const restoredPath = repoBase + p.replace(/~and~/g, '&');
+    history.replaceState(null, '', restoredPath + window.location.hash);
+  }
+  const path = window.location.pathname.replace(repoBase, '').replace(/\//g, '');
+  if (path) {
+    setTimeout(() => goToSection(path, false), 100);
+  }
+})();
+
+window.addEventListener('popstate', () => {
+  const path = window.location.pathname.replace(repoBase, '').replace(/\//g, '');
+  if (path) goToSection(path, false);
+});
+
 // ---------- Share buttons ----------
 document.querySelectorAll('.share-btn').forEach(btn => {
   btn.onclick = async () => {
-    const url = window.location.origin + window.location.pathname + btn.dataset.share;
+    const id = btn.dataset.share;
+    const url = window.location.origin + repoBase + '/' + id + '/';
     try {
       await navigator.clipboard.writeText(url);
       const original = btn.innerHTML;
@@ -716,6 +748,7 @@ document.querySelectorAll('.share-btn').forEach(btn => {
     } catch {
       prompt('Copy this link:', url);
     }
+    history.pushState(null, '', repoBase + '/' + id + '/');
   };
 });
 
