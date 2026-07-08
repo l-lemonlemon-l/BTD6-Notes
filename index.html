@@ -93,6 +93,20 @@
   .chat-msg-time { font-size: 11px; color: var(--muted); }
   .chat-msg-text { font-size: 14px; color: var(--text); }
   .chat-msg-code { font-size: 12px; color: var(--amber); margin-top: 4px; }
+  .discord-feed { display: flex; flex-direction: column; gap: 2px; max-height: 480px; overflow-y: auto; padding-right: 4px; margin-bottom: 1rem; }
+  .discord-msg { display: flex; gap: 12px; padding: 6px 10px; border-radius: 6px; }
+  .discord-msg:hover { background: var(--panel); }
+  .discord-avatar { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; background: var(--panel-2); }
+  .discord-avatar-fallback {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    background: var(--green); color: #14180f; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
+  }
+  .discord-body { flex: 1; min-width: 0; }
+  .discord-head { display: flex; align-items: baseline; gap: 8px; }
+  .discord-name { font-weight: 600; font-size: 14px; color: var(--text); }
+  .discord-time { font-size: 11px; color: var(--muted); }
+  .discord-text { font-size: 14px; color: var(--text); word-wrap: break-word; }
   #auth-area { display: flex; align-items: center; gap: 8px; }
   .auth-btn {
     background: transparent; border: 1px solid var(--border-strong, var(--border)); color: var(--text);
@@ -443,6 +457,24 @@
   </div>
   </section>
 
+  <section id="general-chat">
+    <div class="section-head">
+      <h2><i class="ti ti-message-circle"></i> General Chat</h2>
+      <button class="share-btn" data-share="general-chat"><i class="ti ti-link"></i> Share</button>
+    <button class="collapse-toggle" data-target="general-chat" aria-label="Toggle section"><i class="ti ti-chevron-down"></i></button></div>
+    <div class="section-body" id="general-chat-body">
+    <p style="font-size:13px; color:var(--muted); margin:0 0 1rem;">General hangout — anything BTD6.</p>
+    <p class="signin-note" id="general-signin-note">Sign in to chat.</p>
+    <div id="general-chat-feed" class="discord-feed"></div>
+    <div id="general-chat-form-area" style="display:none;">
+      <div class="add-form">
+        <input id="general-chat-text" type="text" placeholder="Message General Chat..." style="flex:3;" />
+        <button id="general-chat-send-btn"><i class="ti ti-send-2"></i></button>
+      </div>
+    </div>
+  </div>
+  </section>
+
   <section id="videos">
     <div class="section-head">
       <h2><i class="ti ti-brand-youtube" style="color: var(--red);"></i> Videos</h2>
@@ -513,12 +545,16 @@ function renderAuthArea() {
   const tipForm = document.getElementById('tip-form-area');
   const lobbyNote = document.getElementById('lobby-signin-note');
   const lobbyForm = document.getElementById('lobby-form-area');
+  const generalNote = document.getElementById('general-signin-note');
+  const generalForm = document.getElementById('general-chat-form-area');
   if (currentUser) {
     tipNote.style.display = 'none'; tipForm.style.display = 'block';
     lobbyNote.style.display = 'none'; lobbyForm.style.display = 'block';
+    generalNote.style.display = 'none'; generalForm.style.display = 'block';
   } else {
     tipNote.style.display = 'block'; tipForm.style.display = 'none';
     lobbyNote.style.display = 'block'; lobbyForm.style.display = 'none';
+    generalNote.style.display = 'block'; generalForm.style.display = 'none';
   }
 }
 
@@ -903,6 +939,70 @@ async function sendLobbyMessage() {
 document.getElementById('lobby-add-btn').onclick = sendLobbyMessage;
 document.getElementById('lobby-text').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') sendLobbyMessage();
+});
+
+// ---------- General Chat ----------
+const generalChatRef = collection(db, "generalChat");
+const generalChatQuery = query(generalChatRef, orderBy("createdAt", "asc"));
+
+function initials(name) {
+  if (!name) return '?';
+  return name.trim().split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+}
+
+function discordMsg(msg) {
+  const div = document.createElement('div');
+  div.className = 'discord-msg';
+  const avatar = msg.photoURL
+    ? `<img class="discord-avatar" src="${msg.photoURL}" alt="" onerror="this.outerHTML='<div class=&quot;discord-avatar-fallback&quot;>${initials(msg.authorName)}</div>'" />`
+    : `<div class="discord-avatar-fallback">${initials(msg.authorName)}</div>`;
+  div.innerHTML = `
+    ${avatar}
+    <div class="discord-body">
+      <div class="discord-head">
+        <span class="discord-name">${msg.authorName || 'Anonymous'}</span>
+        <span class="discord-time">${formatTime(msg.createdAt)}</span>
+      </div>
+      <div class="discord-text">${msg.text || ''}</div>
+    </div>
+  `;
+  return div;
+}
+
+onSnapshot(generalChatQuery, (snapshot) => {
+  const feed = document.getElementById('general-chat-feed');
+  feed.innerHTML = '';
+  if (snapshot.empty) {
+    feed.innerHTML = '<p style="color:var(--muted); font-size:14px;">No messages yet — say hi.</p>';
+    return;
+  }
+  snapshot.forEach((docSnap) => {
+    feed.appendChild(discordMsg({ id: docSnap.id, ...docSnap.data() }));
+  });
+  feed.scrollTop = feed.scrollHeight;
+}, (err) => {
+  document.getElementById('general-chat-feed').innerHTML =
+    '<p style="color:var(--red); font-size:14px;">Could not connect to chat.</p>';
+  console.error(err);
+});
+
+async function sendGeneralMessage() {
+  if (!currentUser) return;
+  const textIn = document.getElementById('general-chat-text');
+  if (!textIn.value.trim()) return;
+  await addDoc(generalChatRef, {
+    text: textIn.value.trim(),
+    authorName: currentUser.displayName || currentUser.email,
+    photoURL: currentUser.photoURL || null,
+    uid: currentUser.uid,
+    createdAt: serverTimestamp()
+  });
+  textIn.value = '';
+}
+
+document.getElementById('general-chat-send-btn').onclick = sendGeneralMessage;
+document.getElementById('general-chat-text').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendGeneralMessage();
 });
 
 // ---------- Collapsible sections ----------
